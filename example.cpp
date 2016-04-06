@@ -9,9 +9,7 @@ void robot_cpy(const RRRobot& from, RRRobot& to)
   std::memcpy(&to, &from, sizeof(RRRobot)) ;
 }
 
-void move_print(
-    RRRobotMove move
-    )
+void move_print(RRRobotMove move)
 {
   static const char* translations[7] =
   {
@@ -39,7 +37,7 @@ void robot_print(const RRRobot& robot)
   } ;
 
   std::printf(
-      "robot is at (%d, %d) looking %s\n", 
+      "->robot is at (%d, %d) looking %s\n", 
       robot.line,
       robot.column,
       translations[robot.status]

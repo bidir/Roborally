@@ -28,6 +28,9 @@
 *.out
 *.app
 wget
+editor
+example
+showboard
 
 # VIM
 *.swp
