@@ -7,7 +7,8 @@
 
 /** Movements **/
 
-typedef enum {
+typedef enum
+{
     DIRECTION_EAST,
     DIRECTION_NORTH,
     DIRECTION_WEST,
@@ -15,7 +16,8 @@ typedef enum {
     DIRECTION_NONE
 } Direction ;
 
-typedef enum {
+typedef enum
+{
     ROTATION_RIGHT,
     ROTATION_LEFT,
     ROTATION_NONE
@@ -357,14 +359,16 @@ void rr_board_init (RRBoard& board_in, const char* filename)
     board->height = 0 ;
 
     /* check that the board is not NULL */
-    if(!board) {
+    if(!board)
+    {
         printf("board location is not valid\n") ;
         return ;
     }
 
     /* open board file */
     FILE* board_file = fopen(filename, "r") ;
-    if(!board_file) {
+    if(!board_file)
+    {
         printf("unable to open board file\n") ;
         return ;
     }
@@ -383,7 +387,8 @@ void rr_board_init (RRBoard& board_in, const char* filename)
             ) == 3)
     {
         ++tile_size ;
-        if(tile_size == alloc_size) {
+        if(tile_size == alloc_size)
+        {
             /* extend the available memory for tiles */
             RRTile* tmp = (RRTile*) realloc(board->tiles, 2*alloc_size*sizeof(RRTile)) ;
             if(!tmp) 

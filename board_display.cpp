@@ -10,17 +10,18 @@
 
 /**** Drawing with cairo and librsvg ****/
 
-static void draw_id(
-    cairo_t*    cr,
-    const RsvgHandle* style,
-    const char* id,
-    double      unit,
-    double      scale,
-    double      line,
-    double      column,
-    double      angle,
-    int         mirror
-    )
+static void draw_id
+                (
+                    cairo_t*    cr,
+                    const RsvgHandle* style,
+                    const char* id,
+                    double      unit,
+                    double      scale,
+                    double      line,
+                    double      column,
+                    double      angle,
+                    int         mirror
+                )
 {
   /* save the transformation matrix */
   cairo_save(cr) ;
@@ -47,13 +48,14 @@ static void draw_id(
 
 /**** Tiles ****/
 
-static void draw_tile_background(
-    cairo_t* cr,
-    const RsvgHandle* style,
-    double unit,
-    double scale,
-    const RRTile* tile
-    )
+static void draw_tile_background
+                            (
+                                cairo_t* cr,
+                                const RsvgHandle* style,
+                                double unit,
+                                double scale,
+                                const RRTile* tile
+                            )
 {
   if(tile->type != RR_TILE_NONE)
   {
@@ -71,13 +73,14 @@ static void draw_tile_background(
   }
 }
 
-static void draw_tile_type(
-    cairo_t* cr,
-    const RsvgHandle* style,
-    double unit,
-    double scale,
-    const RRTile* tile
-    )
+static void draw_tile_type
+                        (
+                            cairo_t* cr,
+                            const RsvgHandle* style,
+                            double unit,
+                            double scale,
+                            const RRTile* tile
+                        )
 {
   if(tile->type == RR_TILE_NOTHING || tile->type == RR_TILE_NONE)
   {
@@ -102,32 +105,34 @@ static void draw_tile_type(
   else if(tile->type < RR_TILE_JOIN_S_TO_E) 
   {
     /* belt turn, types ordered to compute angle and mirror*/
-    draw_id(
-        cr, 
-        style, 
-        "#turn", 
-        unit, 
-        scale, 
-        tile->line, 
-        tile->column, 
-        -M_PI/2*((tile->type - RR_TILE_TURN_SE)/2),
-        (tile->type - RR_TILE_TURN_SE) % 2
+    draw_id
+        (
+            cr, 
+            style, 
+            "#turn", 
+            unit, 
+            scale, 
+            tile->line, 
+            tile->column, 
+            -M_PI/2*((tile->type - RR_TILE_TURN_SE)/2),
+            (tile->type - RR_TILE_TURN_SE) % 2
         ) ;
   } 
   else if(tile->type < RR_TILE_JOIN_NS_TO_E) 
   {
     /* perpendicular join tile, types ordered to compute angle and mirror */
-    draw_id(
-        cr, 
-        style, 
-        "#perp_join", 
-        unit, 
-        scale, 
-        tile->line, 
-        tile->column, 
-        -M_PI/2*((tile->type - RR_TILE_JOIN_S_TO_E)/2),
-        (tile->type - RR_TILE_JOIN_S_TO_E)%2
-        ) ;
+    draw_id
+        (
+            cr, 
+            style, 
+            "#perp_join", 
+            unit, 
+            scale, 
+            tile->line, 
+            tile->column, 
+            -M_PI/2*((tile->type - RR_TILE_JOIN_S_TO_E)/2),
+            (tile->type - RR_TILE_JOIN_S_TO_E)%2
+        );
   } 
   else if(tile->type < RR_TILE_FAST_BELT_E) 
   {

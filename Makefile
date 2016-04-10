@@ -1,6 +1,7 @@
 CPP      = g++
 
-SOURCES = board.cpp
+#SOURCES=$(wildcard *.cpp)
+SOURCES = tools.cpp Exceptions.cpp Log.cpp board.cpp RRNode.cpp main.cpp
 HEADERS = $(SOURCES:.cpp=.hpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
@@ -17,7 +18,7 @@ LDFLAGS +=
 GTK_CPPFLAGS  = $(CPPFLAGS) $(shell pkg-config --cflags gtk+-3.0 librsvg-2.0)
 GTK_LDFLAGS = $(LDFLAGS) $(shell pkg-config --libs gtk+-3.0 librsvg-2.0)
 
-all : example showboard editor
+all : example showboard editor sansgtk
 
 $(OBJECTS) : %.o : %.cpp
 	$(CPP) -c $(CPPFLAGS) $? -o $@
@@ -25,12 +26,17 @@ $(OBJECTS) : %.o : %.cpp
 $(GTK_OBJECTS) : %.o : %.cpp
 	$(CPP) -c $(GTK_CPPFLAGS) $? -o $@
 
+########## SANS GTK #########
+
+sansgtk : $(OBJECTS) $(HEADERS)
+	$(CPP) $^ -o $@ $(LDFLAGS)
+
 ########## example ##########
 
 EXAMPLE_SOURCES = example.cpp
 EXAMPLE_OBJECTS = $(EXAMPLE_SOURCES:.cpp=.o)
 
-example : $(EXAMPLE_OBJECTS) $(OBJECTS) $(HEADERS)
+example : $(EXAMPLE_OBJECTS) $(HEADERS)
 	$(CPP) $^ -o $@ $(LDFLAGS)
 	
 $(EXAMPLE_OBJECTS): %.o : %.cpp
@@ -62,3 +68,6 @@ $(EDITOR_OBJECTS): %.o : %.cpp
 
 clean:
 	@rm -f example showboard editor $(ALL_OBJECTS) $(EXAMPLE_OBJECTS) $(SHOWBOARD_OBJECTS) $(EDITOR_OBJECTS)
+
+cleanall: clean
+	 *~

@@ -21,6 +21,10 @@
  */
 
 
+#include <vector>
+
+#include "board.hpp"
+
 
 /* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
 // |....oooooooOOOO000000000000000000000000000000000000000000OOOOooooooo....| \\
@@ -29,17 +33,23 @@ Class: RRNode
 Description:  
 // |....----------------------------------------------------------------....| \\
 // \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
-
 class RRNode
 {
     private:
         /* ====================  Data members  ==================== */
+        unsigned int _line;
+        unsigned int _column;
+        RRRobotStatus _status;
+
+        std::vector<RRNode *> _voisins;
 
 
     public:
 
         /* ====================  Constructors  ==================== */
         RRNode();
+        RRNode(unsigned int line, unsigned int column);
+        RRNode(unsigned int line, unsigned int column, RRRobotStatus status);
 
 
         /* ====================  Accessors     ==================== */

@@ -17,7 +17,43 @@
  */
 
 
+#include <iostream>
 #include "RRNode.hpp"
 
 
 using namespace std;
+
+
+
+/* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
+// |....oooooooOOOO000000000000000000000000000000000000000000OOOOooooooo....| \\
+// |....---------------|             class             |----------------....| \\
+Class: RRNode
+Description:  
+// |....----------------------------------------------------------------....| \\
+// \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
+
+/* ====================  Constructors  ==================== */
+RRNode::RRNode():
+    _line(0),
+    _column(0),
+    _status(RRRobotStatus::RR_ROBOT_E),
+    _voisins(7, NULL)
+{}
+
+RRNode::RRNode(unsigned int line, unsigned int column):
+    _line(line),
+    _column(column),
+    _status(RRRobotStatus::RR_ROBOT_E),
+    _voisins(7, NULL)
+{}
+
+RRNode::RRNode(unsigned int line, unsigned int column, RRRobotStatus status):
+    _line(line),
+    _column(column),
+    _status(status),
+    _voisins(7, NULL)
+{}
+
+
+
