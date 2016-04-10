@@ -43,6 +43,7 @@
 #define ERR_OPEN_FILE 9
 #define ERR_CREATE_DIR 10
 #define ERR_INVALID_PROTOCOLE 11
+#define ERR_NULL_POINTER 11
 
 #include <iostream>
 #include <vector>
@@ -231,6 +232,41 @@ class ExCreatingDir : public Exception
         {};
 
         ExCreatingDir
+            (
+                const std::string &msg,
+                const ExceptionInfo &info
+            ) throw():Exception(ERR_CREATE_DIR, msg, info)
+        {};
+};
+/* -----************************  end of class  ************************----- \\
+       ExCreatingDir
+// -----****************************************************************----- */
+
+
+
+/* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
+// |....oooooooOOOO000000000000000000000000000000000000000000OOOOooooooo....| \\
+// |....oooooooOOOO00000********°°°°°^^^^^°°°°°********000000OOOOooooooo....| \\
+// |....---------------|             class             |----------------....| \\
+    Class: ExCreatingDir
+    Description:
+// |....----------------------------------------------------------------....| \\
+// |....°°°°°°°OOOOOOOOO00000000000000000000000000000000OOOOOOOOO°°°°°°°....| \\
+// \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
+class ExNullPointer : public Exception
+{
+    public:
+        /* ====================  Constructors  ==================== */
+        ExCreatingDir
+            (
+                const std::string &msg,
+                const std::string &file,
+                const std::string &function,
+                int line
+            ) throw():Exception(ERR_CREATE_DIR, msg, file, function, line)
+        {};
+
+        ExNullPointer
             (
                 const std::string &msg,
                 const ExceptionInfo &info

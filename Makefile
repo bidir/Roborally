@@ -1,7 +1,7 @@
 CPP      = g++
 
 #SOURCES=$(wildcard *.cpp)
-SOURCES = tools.cpp Exceptions.cpp Log.cpp board.cpp RRNode.cpp main.cpp
+SOURCES = tools.cpp Exceptions.cpp Log.cpp board.cpp RRNode.cpp RRGraph.cpp main.cpp
 HEADERS = $(SOURCES:.cpp=.hpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
@@ -18,7 +18,7 @@ LDFLAGS +=
 GTK_CPPFLAGS  = $(CPPFLAGS) $(shell pkg-config --cflags gtk+-3.0 librsvg-2.0)
 GTK_LDFLAGS = $(LDFLAGS) $(shell pkg-config --libs gtk+-3.0 librsvg-2.0)
 
-all : example showboard editor sansgtk
+all :showboard editor sansgtk
 
 $(OBJECTS) : %.o : %.cpp
 	$(CPP) -c $(CPPFLAGS) $? -o $@

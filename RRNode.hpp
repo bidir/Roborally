@@ -37,9 +37,7 @@ class RRNode
 {
     private:
         /* ====================  Data members  ==================== */
-        unsigned int _line;
-        unsigned int _column;
-        RRRobotStatus _status;
+        RRRobot _robot;
 
         std::vector<RRNode *> _voisins;
 
@@ -47,17 +45,28 @@ class RRNode
     public:
 
         /* ====================  Constructors  ==================== */
-        RRNode();
+        RRNode(RRRobot &robot);
+
+        /*RRNode();
         RRNode(unsigned int line, unsigned int column);
         RRNode(unsigned int line, unsigned int column, RRRobotStatus status);
+        ~RRNode();*/
 
 
         /* ====================  Accessors     ==================== */
-
+        RRRobot getRobot();
+        unsigned int getLine();
+        unsigned int getColumn();
+        RRRobotStatus getStatus();
+        RRNode &getVoisin(RRRobotMove move);
 
 
         /* ====================  Mutators      ==================== */
-
+        void setLine(unsigned int line);
+        void setColumn(unsigned int column);
+        void setStatus(RRRobotStatus status);
+        void setVoisin(RRRobotMove move, RRNode *node);
+        void setVoisin(RRRobotMove move, RRNode &node);
 
 
         /* ====================  Operators     ==================== */
@@ -65,7 +74,7 @@ class RRNode
 
 
         /* ====================  Methods       ==================== */
-
+        void moveRobot(RRRobot &robot, RRRobotMove move);
 
 
     protected:

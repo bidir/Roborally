@@ -75,7 +75,7 @@ typedef struct
     unsigned int tile_size ;
     unsigned int width ;
     unsigned int height ;
-} RRBoard ;
+} RRBoard;
 
 /* Robot movements */
 
