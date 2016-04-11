@@ -1,7 +1,7 @@
 CPP      = g++
 
 #SOURCES=$(wildcard *.cpp)
-SOURCES = tools.cpp Exceptions.cpp Log.cpp board.cpp RRNode.cpp RRGraph.cpp main.cpp
+SOURCES = tools.cpp Exceptions.cpp Log.cpp board.cpp RRNode.cpp RRGraph.cpp
 HEADERS = $(SOURCES:.cpp=.hpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
@@ -27,20 +27,12 @@ $(GTK_OBJECTS) : %.o : %.cpp
 	$(CPP) -c $(GTK_CPPFLAGS) $? -o $@
 
 ########## SANS GTK #########
+SANSGTK_SOURCES = $(SOURCES) main.cpp
+SANSGTK_HEADERS = $(SANSGTK_SOURCES:.cpp=.hpp)
+SANSGTK_OBJECTS = $(SANSGTK_SOURCES:.cpp=.o)
 
-sansgtk : $(OBJECTS) $(HEADERS)
+sansgtk : $(SANSGTK_OBJECTS) $(SANSGTK_HEADERS)
 	$(CPP) $^ -o $@ $(LDFLAGS)
-
-########## example ##########
-
-EXAMPLE_SOURCES = example.cpp
-EXAMPLE_OBJECTS = $(EXAMPLE_SOURCES:.cpp=.o)
-
-example : $(EXAMPLE_OBJECTS) $(HEADERS)
-	$(CPP) $^ -o $@ $(LDFLAGS)
-	
-$(EXAMPLE_OBJECTS): %.o : %.cpp
-	$(CPP) -c $(CPPFLAGS) $? -o $@
 
 ########## showboard ##########
 

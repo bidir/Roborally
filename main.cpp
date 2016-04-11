@@ -16,12 +16,15 @@
  * =============================================================================
  */
 
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
-#include "main.hpp"
+
 #include <iostream>
 #include <fstream>
-#include "RRGraph.hpp"
 #include "Log.hpp"
+#include "main.hpp"
 
 
 using namespace std;
@@ -41,14 +44,7 @@ int main(int argc, char *argv[])
         Log::init();
 
         // ************************
-        RRGraph *graph = new RRGraph("board.txt");
-        RRRobot robot;
-        robot.line = 0;
-        robot.column = 0;
-        robot.status  = RRRobotStatus::RR_ROBOT_E;
-        graph->init(robot);
-        delete graph;
-
+        example();
         // ************************
         end();
         return 0; 
@@ -77,4 +73,95 @@ void end()
     cout << endl;
     log_file.close();
     d_file.close();
+}
+
+void robot_cpy(const RRRobot& from, RRRobot& to)
+{
+    std::memcpy(&to, &from, sizeof(RRRobot)) ;
+}
+
+void move_print(RRRobotMove move)
+{
+    static const char* translations[7] =
+    {
+        "movind forward 1 tile",
+        "movind forward 2 tiles",
+        "movind forward 3 tiles",
+        "moving backward 1 tile",
+        "rotating left",
+        "rotating right",
+        "u turning"
+    } ;
+
+    std::printf("%s\n", translations[move]) ;
+}
+
+void robot_print(const RRRobot& robot)
+{
+    static const char* translations[5] =
+    {
+        "east",
+        "north",
+        "west",
+        "south",
+        "dead"
+    } ;
+
+    std::printf(
+            "->robot is at (%d, %d) looking %s\n", 
+            robot.line,
+            robot.column,
+            translations[robot.status]
+            ) ;
+}
+
+void example()
+{
+    try
+    {
+        //rr_board_init(board, "board.txt") ;
+        RRGraph graph("board.txt");
+
+        RRRobot robot ;
+        robot.line = graph.getBoard().tiles[0].line ;
+        robot.column = graph.getBoard().tiles[0].column ;
+        robot.status = RR_ROBOT_N ;
+
+        graph.init(robot);
+
+        RRRobot prev_robot ;
+        robot_cpy(robot, prev_robot) ;
+
+        const RRRobotMove moves[13] =
+        {
+            RR_TURN_RIGHT,
+            RR_MOVE_FORWARD_2,
+            RR_MOVE_FORWARD_1,
+            RR_U_TURN,
+            RR_MOVE_FORWARD_1,
+            RR_TURN_RIGHT,
+            RR_MOVE_FORWARD_1,
+            RR_MOVE_BACKWARD_1,
+            RR_MOVE_FORWARD_2,
+            RR_TURN_LEFT,
+            RR_MOVE_FORWARD_3,
+            RR_MOVE_BACKWARD_1,
+            RR_MOVE_FORWARD_2
+        } ;
+
+        robot_print(robot) ;
+
+        for(unsigned int i = 0; i < 13; ++i)
+        {
+            move_print(moves[i]) ;
+            robot_cpy(graph.getRobot(), prev_robot) ;
+            graph.move(moves[i]) ;
+            robot_print(graph.getRobot()) ;
+        }
+    }
+    catch(Exception &ex)
+    {
+        AddTrace(ex);
+        throw ex;
+    }
 }

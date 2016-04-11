@@ -18,6 +18,8 @@
 
 
 #include <iostream>
+#include <limits.h>
+
 #include "RRNode.hpp"
 
 
@@ -38,19 +40,26 @@ Description:
 /* ====================  Constructors  ==================== */
 RRNode::RRNode():
     _visited(false),
+    _in_queue(false),
+    _solved(false),
+    _distance(INT_MAX),
     _robot(),
+    _best_prev(NULL),
     _voisins(NB_MOVES, NULL)
-{}
+{
+    _robot.line = 0;
+    _robot.column = 0;
+    _robot.status = RRRobotStatus::RR_ROBOT_DEAD;
+}
 
 RRNode::RRNode(RRRobot &robot):
-    _visited(false),
-    _robot(robot),
-    _voisins(NB_MOVES, NULL)
-{}
+    RRNode()
+{
+    _robot = robot;
+}
 
 RRNode::~RRNode()
-{
-}
+{}
 
 /*RRNode::RRNode(unsigned int line, unsigned int column):
     RRNode(line, column, RRRobotStatus::RR_ROBOT_E)
@@ -70,6 +79,26 @@ RRNode::RRNode(unsigned int line, unsigned int column, RRRobotStatus status):
 bool RRNode::isVisited()
 {
     return _visited;
+}
+
+bool RRNode::isInQueue()
+{
+    return _in_queue;
+}
+
+bool RRNode::isSolved()
+{
+    return _solved;
+}
+
+int RRNode::getDistance()
+{
+    return _distance;
+}
+
+bool RRNode::isDead()
+{
+    return _robot.status == RRRobotStatus::RR_ROBOT_DEAD;
 }
 
 RRRobot RRNode::getRobot()
@@ -92,6 +121,11 @@ RRRobotStatus RRNode::getStatus()
     return _robot.status;
 }
 
+RRNode *RRNode::getBestPrev()
+{
+    return _best_prev;
+}
+
 RRNode *RRNode::getVoisin(RRRobotMove move)
 {
     return _voisins[move];
@@ -102,6 +136,21 @@ RRNode *RRNode::getVoisin(RRRobotMove move)
 void RRNode::setVisited(bool visited)
 {
     _visited = visited;
+}
+
+void RRNode::setInQueue(bool in_queue)
+{
+    _in_queue = in_queue;
+}
+
+void RRNode::setSolved(bool solved)
+{
+    _visited = solved;
+}
+
+void RRNode::setDistance(int dist)
+{
+    _distance = dist;
 }
 
 void RRNode::setLine(unsigned int line)
@@ -117,6 +166,16 @@ void RRNode::setColumn(unsigned int column)
 void RRNode::setStatus(RRRobotStatus status)
 {
     _robot.status = status;
+}
+
+void RRNode::setBestPrev(RRNode *prev)
+{
+    _best_prev = prev;
+}
+
+void RRNode::setBestPrev(RRNode &prev)
+{
+    setBestPrev(&prev);
 }
 
 void RRNode::setVoisin(RRRobotMove move, RRNode *node)
@@ -139,17 +198,4 @@ bool operator==(const RRNode &node1, const RRNode &node2)
 bool operator!=(const RRNode &node1, const RRNode &node2)
 {
     return node1._robot.line != node2._robot.line || node1._robot.column != node2._robot.column || node1._robot.status != node2._robot.status;
-}
-
-
-/* ====================  Methods       ==================== */
-void RRNode::deleteVoisin()
-{
-    for(unsigned int i = 0; i < _voisins.size(); i++)
-    {
-        if(_voisins[i])
-        {
-            delete _voisins[i];
-        }
-    }
 }

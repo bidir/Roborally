@@ -45,6 +45,8 @@
 #define ERR_INVALID_PROTOCOLE 11
 #define ERR_NULL_POINTER 12
 #define ERR_MEMORY 13
+#define ERR_ROBOT_DEAD 14
+#define ERR_BOARD 15
 
 #include <iostream>
 #include <vector>
@@ -312,4 +314,75 @@ class ExMemory : public Exception
 /* -----************************  end of class  ************************----- \\
        ExMemory
 // -----****************************************************************----- */
+
+
+
+/* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
+// |....oooooooOOOO000000000000000000000000000000000000000000OOOOooooooo....| \\
+// |....oooooooOOOO00000********°°°°°^^^^^°°°°°********000000OOOOooooooo....| \\
+// |....---------------|             class             |----------------....| \\
+    Class: ExMemory
+    Description:
+// |....----------------------------------------------------------------....| \\
+// |....°°°°°°°OOOOOOOOO00000000000000000000000000000000OOOOOOOOO°°°°°°°....| \\
+// \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
+class ExRobotDead : public Exception
+{
+    public:
+        /* ====================  Constructors  ==================== */
+        ExRobotDead
+            (
+                const std::string &msg,
+                const std::string &file,
+                const std::string &function,
+                int line
+            ) throw():Exception(ERR_ROBOT_DEAD, msg, file, function, line)
+        {};
+
+        ExRobotDead
+            (
+                const std::string &msg,
+                const ExceptionInfo &info
+            ) throw():Exception(ERR_ROBOT_DEAD, msg, info)
+        {};
+};
+/* -----************************  end of class  ************************----- \\
+       ExMemory
+// -----****************************************************************----- */
+
+
+
+/* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
+// |....oooooooOOOO000000000000000000000000000000000000000000OOOOooooooo....| \\
+// |....oooooooOOOO00000********°°°°°^^^^^°°°°°********000000OOOOooooooo....| \\
+// |....---------------|             class             |----------------....| \\
+    Class: ExBoard
+    Description:
+// |....----------------------------------------------------------------....| \\
+// |....°°°°°°°OOOOOOOOO00000000000000000000000000000000OOOOOOOOO°°°°°°°....| \\
+// \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
+class ExBoard : public Exception
+{
+    public:
+        /* ====================  Constructors  ==================== */
+        ExBoard
+            (
+                const std::string &msg,
+                const std::string &file,
+                const std::string &function,
+                int line
+            ) throw():Exception(ERR_BOARD, msg, file, function, line)
+        {};
+
+        ExBoard
+            (
+                const std::string &msg,
+                const ExceptionInfo &info
+            ) throw():Exception(ERR_BOARD, msg, info)
+        {};
+};
+/* -----************************  end of class  ************************----- \\
+       ExBoard
+// -----****************************************************************----- */
+
 #endif

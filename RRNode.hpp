@@ -56,7 +56,13 @@ class RRNode
 
     private:
         bool _visited;
+        bool _in_queue;
+        bool _solved;
+
+        int _distance;
+
         RRRobot _robot;
+        RRNode *_best_prev;
 
         std::vector<RRNode *> _voisins;
 
@@ -76,18 +82,28 @@ class RRNode
 
         /* ====================  Accessors     ==================== */
         bool isVisited();
-        RRRobot getRobot();
+        bool isInQueue();
+        bool isSolved();
+        bool isDead();
+        int getDistance();
         unsigned int getLine();
         unsigned int getColumn();
         RRRobotStatus getStatus();
+        RRRobot getRobot();
+        RRNode *getBestPrev();
         RRNode *getVoisin(RRRobotMove move);
 
 
         /* ====================  Mutators      ==================== */
         void setVisited(bool visited);
+        void setInQueue(bool in_queue);
+        void setSolved(bool solved);
+        void setDistance(int dist);
         void setLine(unsigned int line);
         void setColumn(unsigned int column);
         void setStatus(RRRobotStatus status);
+        void setBestPrev(RRNode *best);
+        void setBestPrev(RRNode &best);
         void setVoisin(RRRobotMove move, RRNode *node);
         void setVoisin(RRRobotMove move, RRNode &node);
 
@@ -98,8 +114,6 @@ class RRNode
 
 
         /* ====================  Methods       ==================== */
-        void moveRobot(RRRobot &robot, RRRobotMove move);
-        void deleteVoisin();
 
 
     protected:

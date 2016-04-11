@@ -5,6 +5,7 @@
 #include <string>
 
 #include "Exceptions.hpp"
+#include "Log.hpp"
 
 /**** Types ****/
 
@@ -353,6 +354,7 @@ static const RRTile* robot_apply(RRRobot* robot, const RRBoard* board, const RRT
 
 void rr_board_init (RRBoard& board_in, const char* filename)
 {
+    LogD("Recuperation des donnees dans \"" + std::string(filename) + "\".");
     RRBoard* board = &board_in;
 
     /* initialize board values */
@@ -471,6 +473,7 @@ void rr_board_init (RRBoard& board_in, const char* filename)
 
     /* sort the tiles for easy finding */
     std::qsort(board->tiles, board->tile_size, sizeof(RRTile), tile_compare);
+    LogD("Fin recuperation des donnees dans \"" + std::string(filename) + "\".");
 }
 
 void rr_board_destroy(RRBoard& board)

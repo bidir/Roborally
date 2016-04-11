@@ -37,8 +37,8 @@ class RRGraph
 {
         /* ====================  Data members  ==================== */
     private:
+        RRNode *_node;
         RRBoard _board;
-
         std::vector<RRNode *> _nodes;
 
 
@@ -50,34 +50,33 @@ class RRGraph
 
 
         /* ====================  Accessors     ==================== */
-
+        bool isDead();
+        RRNode *getNode();
+        RRRobot getRobot();
+        RRBoard getBoard();
 
 
         /* ====================  Mutators      ==================== */
 
 
-
         /* ====================  Operators     ==================== */
-
 
 
         /* ====================  Methods       ==================== */
         void init(RRRobot &robot);
         void init(const std::string filename, RRRobot &robot);
         int isNodeExists(RRNode &node);
+        void move(RRRobotMove move);
+        void bestRoute(unsigned int line, unsigned int column);
 
 
 
     protected:
         /* ====================  Methods       ==================== */
         void init();
-
-
+        unsigned int minDist(std::vector<RRNode *> &queue);
 };
 /* -----************************  end of class  ************************----- \\
    RRNode
 // -----****************************************************************----- */
-
-
-
 #endif
