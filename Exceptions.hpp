@@ -43,7 +43,8 @@
 #define ERR_OPEN_FILE 9
 #define ERR_CREATE_DIR 10
 #define ERR_INVALID_PROTOCOLE 11
-#define ERR_NULL_POINTER 11
+#define ERR_NULL_POINTER 12
+#define ERR_MEMORY 13
 
 #include <iostream>
 #include <vector>
@@ -257,24 +258,58 @@ class ExNullPointer : public Exception
 {
     public:
         /* ====================  Constructors  ==================== */
-        ExCreatingDir
+        ExNullPointer
             (
                 const std::string &msg,
                 const std::string &file,
                 const std::string &function,
                 int line
-            ) throw():Exception(ERR_CREATE_DIR, msg, file, function, line)
+            ) throw():Exception(ERR_NULL_POINTER, msg, file, function, line)
         {};
 
         ExNullPointer
             (
                 const std::string &msg,
                 const ExceptionInfo &info
-            ) throw():Exception(ERR_CREATE_DIR, msg, info)
+            ) throw():Exception(ERR_NULL_POINTER, msg, info)
         {};
 };
 /* -----************************  end of class  ************************----- \\
        ExCreatingDir
 // -----****************************************************************----- */
 
+
+
+/* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
+// |....oooooooOOOO000000000000000000000000000000000000000000OOOOooooooo....| \\
+// |....oooooooOOOO00000********°°°°°^^^^^°°°°°********000000OOOOooooooo....| \\
+// |....---------------|             class             |----------------....| \\
+    Class: ExMemory
+    Description:
+// |....----------------------------------------------------------------....| \\
+// |....°°°°°°°OOOOOOOOO00000000000000000000000000000000OOOOOOOOO°°°°°°°....| \\
+// \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
+class ExMemory : public Exception
+{
+    public:
+        /* ====================  Constructors  ==================== */
+        ExMemory
+            (
+                const std::string &msg,
+                const std::string &file,
+                const std::string &function,
+                int line
+            ) throw():Exception(ERR_MEMORY, msg, file, function, line)
+        {};
+
+        ExMemory
+            (
+                const std::string &msg,
+                const ExceptionInfo &info
+            ) throw():Exception(ERR_MEMORY, msg, info)
+        {};
+};
+/* -----************************  end of class  ************************----- \\
+       ExMemory
+// -----****************************************************************----- */
 #endif

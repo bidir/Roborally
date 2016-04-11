@@ -21,6 +21,7 @@
  */
 
 
+#include <string>
 #include "RRNode.hpp"
 
 
@@ -34,18 +35,18 @@ Description:
 // \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
 class RRGraph
 {
-    private:
         /* ====================  Data members  ==================== */
-        RRBoard *_board;
+    private:
+        RRBoard _board;
 
-        std::vector<RRNode> _nodes;
+        std::vector<RRNode *> _nodes;
 
 
     public:
         /* ====================  Constructors  ==================== */
         RRGraph();
-        RRGraph(RRBoard *board);
-        RRGraph(RRBoard &board);
+        RRGraph(const std::string &filename);
+        ~RRGraph();
 
 
         /* ====================  Accessors     ==================== */
@@ -61,13 +62,15 @@ class RRGraph
 
 
         /* ====================  Methods       ==================== */
-        void init();
-        void init(RRBoard *board);
+        void init(RRRobot &robot);
+        void init(const std::string filename, RRRobot &robot);
+        int isNodeExists(RRNode &node);
 
 
 
     protected:
         /* ====================  Methods       ==================== */
+        void init();
 
 
 };

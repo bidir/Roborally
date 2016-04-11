@@ -30,6 +30,13 @@ using namespace std;
 
 namespace tools
 {
+    std::string toString(int val)
+    {
+        stringstream ss;
+        ss << val;
+        return ss.str();
+    }
+
     void toUpper(string *str)
     {
         transform(str->begin(), str->end(), str->begin(), ::toupper);

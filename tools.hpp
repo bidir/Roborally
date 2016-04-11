@@ -31,6 +31,7 @@
 
 namespace tools
 {
+    std::string toString(int val);
     void toUpper(std::string *str);
     std::string toUpper(std::string str);
     std::string getCurrentTime();

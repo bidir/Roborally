@@ -58,23 +58,23 @@ typedef enum {
     /* 49 */  RR_TILE_ROTATE_LEFT, 
     /* 50 */  RR_TILE_NOTHING,
     /* 51 */  RR_TILE_NONE 
-} RRTileType ;
+} RRTileType;
 
 typedef struct
 {
-    int line ;
-    int column ;
-    RRTileType type ;
-} RRTile ;
+    int line;
+    int column;
+    RRTileType type;
+} RRTile;
 
 /* Board */
 
 typedef struct
 {
-    RRTile* tiles ;
-    unsigned int tile_size ;
-    unsigned int width ;
-    unsigned int height ;
+    RRTile* tiles;
+    unsigned int tile_size;
+    unsigned int width;
+    unsigned int height;
 } RRBoard;
 
 /* Robot movements */
@@ -88,7 +88,7 @@ typedef enum
     RR_TURN_LEFT,
     RR_TURN_RIGHT,
     RR_U_TURN
-} RRRobotMove ;
+} RRRobotMove;
 
 /* Robot status (mostly orientation) */
 
@@ -99,29 +99,29 @@ typedef enum
     RR_ROBOT_W,
     RR_ROBOT_S,
     RR_ROBOT_DEAD
-} RRRobotStatus ;
+} RRRobotStatus;
 
 /* Robot */
 
 typedef struct
 {
-    unsigned int line ;
-    unsigned int column ;
-    RRRobotStatus status ;
-} RRRobot ;
+    unsigned int line;
+    unsigned int column;
+    RRRobotStatus status;
+} RRRobot;
 
 /** Board construction and destruction **/
 
 void rr_board_init(RRBoard& board, const char* filename);
 
-void rr_board_destroy(RRBoard& board) ;
+void rr_board_destroy(RRBoard& board);
 
-void rr_board_save(RRBoard& board, const char* filename) ;
+void rr_board_save(RRBoard& board, const char* filename);
 
 /** Moves **/
 
 /* play a move from a given robot position */
 
-void rr_board_play(const RRBoard& board, RRRobot& robot, /* updated */ RRRobotMove move) ;
+void rr_board_play(const RRBoard& board, RRRobot& robot, /* updated */ RRRobotMove move);
 
 #endif

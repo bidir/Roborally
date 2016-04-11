@@ -21,9 +21,24 @@
  */
 
 
+#define NB_MOVES 7
+
 #include <vector>
 
 #include "board.hpp"
+
+
+
+const RRRobotMove MOVES[NB_MOVES] =
+{
+    RR_MOVE_FORWARD_1,
+    RR_MOVE_FORWARD_2,
+    RR_MOVE_FORWARD_3,
+    RR_MOVE_BACKWARD_1,
+    RR_TURN_LEFT,
+    RR_TURN_RIGHT,
+    RR_U_TURN
+};
 
 
 /* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
@@ -35,8 +50,12 @@ Description:
 // \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
 class RRNode
 {
-    private:
         /* ====================  Data members  ==================== */
+    public:
+        static RRNode *DEAD;
+
+    private:
+        bool _visited;
         RRRobot _robot;
 
         std::vector<RRNode *> _voisins;
@@ -45,7 +64,9 @@ class RRNode
     public:
 
         /* ====================  Constructors  ==================== */
+        RRNode();
         RRNode(RRRobot &robot);
+        ~RRNode();
 
         /*RRNode();
         RRNode(unsigned int line, unsigned int column);
@@ -54,14 +75,16 @@ class RRNode
 
 
         /* ====================  Accessors     ==================== */
+        bool isVisited();
         RRRobot getRobot();
         unsigned int getLine();
         unsigned int getColumn();
         RRRobotStatus getStatus();
-        RRNode &getVoisin(RRRobotMove move);
+        RRNode *getVoisin(RRRobotMove move);
 
 
         /* ====================  Mutators      ==================== */
+        void setVisited(bool visited);
         void setLine(unsigned int line);
         void setColumn(unsigned int column);
         void setStatus(RRRobotStatus status);
@@ -70,11 +93,13 @@ class RRNode
 
 
         /* ====================  Operators     ==================== */
-
+        friend bool operator==(const RRNode &node1, const RRNode &node2);
+        friend bool operator!=(const RRNode &node1, const RRNode &node2);
 
 
         /* ====================  Methods       ==================== */
         void moveRobot(RRRobot &robot, RRRobotMove move);
+        void deleteVoisin();
 
 
     protected:
