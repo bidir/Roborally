@@ -84,9 +84,9 @@ void move_print(RRRobotMove move)
 {
     static const char* translations[7] =
     {
-        "movind forward 1 tile",
-        "movind forward 2 tiles",
-        "movind forward 3 tiles",
+        "moving forward 1 tile",
+        "moving forward 2 tiles",
+        "moving forward 3 tiles",
         "moving backward 1 tile",
         "rotating left",
         "rotating right",
@@ -128,9 +128,9 @@ void example()
         robot.status = RR_ROBOT_N ;
 
         graph.init(robot);
+        graph.findBestRoutes();
 
-        RRRobot prev_robot ;
-        robot_cpy(robot, prev_robot) ;
+        RRRobot prev_robot ; robot_cpy(robot, prev_robot) ;
 
         const RRRobotMove moves[13] =
         {
@@ -148,6 +148,24 @@ void example()
             RR_MOVE_BACKWARD_1,
             RR_MOVE_FORWARD_2
         } ;
+
+
+        cout << "merde" << endl;
+        RRNode *node = graph.getShorterNode(0, 4);
+        //RRNode *node = graph.findBestRoutes(0, 4);
+        //RRNode *node = graph.findBestRoutes(4, 5);
+
+        do
+        {
+            robot_print(node->getRobot());
+            move_print(node->getBestMove());
+            node = node->getBestPrev();
+        }
+        while(node != graph.getNode());
+        robot_print(graph.getNode()->getRobot());
+        move_print(graph.getNode()->getBestMove());
+
+        cout << "======================================" << endl;
 
         robot_print(robot) ;
 

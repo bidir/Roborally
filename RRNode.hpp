@@ -41,6 +41,14 @@ const RRRobotMove MOVES[NB_MOVES] =
 };
 
 
+typedef enum
+{
+    BLANC,
+    NOIR,
+    GRIS
+} RRNodeType;
+
+
 /* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
 // |....oooooooOOOO000000000000000000000000000000000000000000OOOOooooooo....| \\
 // |....---------------|             class             |----------------....| \\
@@ -62,7 +70,10 @@ class RRNode
         int _distance;
 
         RRRobot _robot;
+        RRRobotMove _best_move;
+
         RRNode *_best_prev;
+        RRNodeType _type;
 
         std::vector<RRNode *> _voisins;
 
@@ -88,8 +99,10 @@ class RRNode
         int getDistance();
         unsigned int getLine();
         unsigned int getColumn();
+        RRRobotMove getBestMove();
         RRRobotStatus getStatus();
         RRRobot getRobot();
+        RRNodeType getType();
         RRNode *getBestPrev();
         RRNode *getVoisin(RRRobotMove move);
 
@@ -102,6 +115,8 @@ class RRNode
         void setLine(unsigned int line);
         void setColumn(unsigned int column);
         void setStatus(RRRobotStatus status);
+        void setBestMove(RRRobotMove move);
+        void setType(RRNodeType type);
         void setBestPrev(RRNode *best);
         void setBestPrev(RRNode &best);
         void setVoisin(RRRobotMove move, RRNode *node);

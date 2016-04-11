@@ -20,6 +20,7 @@
 #include <iostream>
 #include <limits.h>
 
+#include "Log.hpp"
 #include "RRNode.hpp"
 
 
@@ -44,6 +45,7 @@ RRNode::RRNode():
     _solved(false),
     _distance(INT_MAX),
     _robot(),
+    _best_move(),
     _best_prev(NULL),
     _voisins(NB_MOVES, NULL)
 {
@@ -106,6 +108,11 @@ RRRobot RRNode::getRobot()
     return _robot;
 }
 
+RRNodeType RRNode::getType()
+{
+    return _type;
+}
+
 unsigned int RRNode::getLine()
 {
     return _robot.line;
@@ -114,6 +121,11 @@ unsigned int RRNode::getLine()
 unsigned int RRNode::getColumn()
 {
     return _robot.column;
+}
+
+RRRobotMove RRNode::getBestMove()
+{
+    return _best_move;
 }
 
 RRRobotStatus RRNode::getStatus()
@@ -166,6 +178,16 @@ void RRNode::setColumn(unsigned int column)
 void RRNode::setStatus(RRRobotStatus status)
 {
     _robot.status = status;
+}
+
+void RRNode::setBestMove(RRRobotMove move)
+{
+    _best_move = move;
+}
+
+void RRNode::setType(RRNodeType type)
+{
+    _type = type;
 }
 
 void RRNode::setBestPrev(RRNode *prev)

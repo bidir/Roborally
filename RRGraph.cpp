@@ -40,12 +40,12 @@ Description:
 RRGraph::RRGraph():
     _node(NULL),
     _board(),
-    _nodes()
+    _nodes(),
+    _shorter_nodes(NULL)
 {}
 
 RRGraph::RRGraph(const string &filename):
-    _node(NULL),
-    _nodes()
+    RRGraph()
 {
     try
     {
@@ -65,6 +65,15 @@ RRGraph::~RRGraph()
         {
             delete _nodes[i];
         }
+    }
+    if(_shorter_nodes)
+    {
+        for(unsigned int i = 0; i < _shorter_nodes->size(); i++)
+        {
+            (*_shorter_nodes)[i]->clear();
+            delete (*_shorter_nodes)[i];
+        }
+        delete _shorter_nodes;
     }
     rr_board_destroy(_board);
 }
@@ -89,6 +98,18 @@ RRRobot RRGraph::getRobot()
 RRBoard RRGraph::getBoard()
 {
     return _board;
+}
+
+RRNode *RRGraph::getShorterNode(unsigned int line, unsigned int column)
+{
+    return (*(*_shorter_nodes)[line])[column];
+}
+
+
+/* ====================  Mutators      ==================== */
+void RRGraph::setShorterNode(unsigned int line, unsigned int column, RRNode *node)
+{
+    (*(*_shorter_nodes)[line])[column] = node;
 }
 
 
@@ -121,47 +142,8 @@ void RRGraph::init(RRRobot &robot)
     }
 
     _nodes.push_back(rr_node);
-    init();
     _node = rr_node;
-}
-
-void RRGraph::init()
-{
-    for(unsigned int n = 0; n < _nodes.size(); n++)
-    {
-        RRNode *node = _nodes[n];
-        for(int i = 0; i < NB_MOVES; i++)
-        {
-            RRNode *voisin = node->getVoisin(MOVES[i]);
-            //Si voisin n'est pas case morte et si il n'a pas deja ete traite
-            if(voisin != RRNode::DEAD && voisin->getVoisin(MOVES[0]) == NULL)
-            {
-                for(int m = 0; m < NB_MOVES; m++)
-                {
-                    RRRobot bot = voisin->getRobot();
-                    rr_board_play(_board, bot, MOVES[m]);
-                    if(bot.status == RRRobotStatus::RR_ROBOT_DEAD)
-                    {
-                        voisin->setVoisin(MOVES[m], RRNode::DEAD);
-                    }
-                    else
-                    {
-                        RRNode *rr_node2 = new RRNode(bot);
-                        int index = isNodeExists(*rr_node2);
-                        if(index != -1)
-                        {
-                            voisin->setVoisin(MOVES[m], _nodes[index]);
-                        }
-                        else
-                        {
-                            voisin->setVoisin(MOVES[m], rr_node2);
-                        }
-                    }
-                }
-                _nodes.push_back(voisin);
-            }
-        }
-    }
+    init();
 }
 
 void RRGraph::init(const std::string filename, RRRobot &robot)
@@ -203,26 +185,29 @@ void RRGraph::move(RRRobotMove move)
     _node = _node->getVoisin(move);
 }
 
-void RRGraph::bestRoute(unsigned int line, unsigned int column)
+RRNode *RRGraph::bestRoute(unsigned int line, unsigned int column)
+{
+    return getShorterNode(line, column);
+}
+
+RRNode *RRGraph::findBestRoutes(unsigned int line, unsigned int column)
 {
     if(_nodes.size() == 0)
     {
-        return;
+        return NULL;
     }
 
+    resetShorterNodes();
     vector<RRNode *> queue(0);
     for(unsigned int i = 0; i < _nodes.size(); i++)
     {
-        _nodes[i]->setBestPrev(NULL);
-        _nodes[i]->setVisited(false);
-        _nodes[i]->setInQueue(false);
-        _nodes[i]->setSolved(false);
         _nodes[i]->setDistance(INT_MAX);
+        _nodes[i]->setBestPrev(NULL);
+        _nodes[i]->setType(RRNodeType::BLANC);
     }
 
-    _nodes[0]->setDistance(0);
-    _nodes[0]->setInQueue(true);
-    queue.push_back(_nodes[0]);
+    _node->setDistance(0);
+    addToQueue(queue, _node);
 
     while(!queue.empty())
     {
@@ -230,23 +215,127 @@ void RRGraph::bestRoute(unsigned int line, unsigned int column)
         RRNode *v = queue[min_index];
         queue.erase(queue.begin() + min_index);
 
-        v->setSolved(true);
+        v->setType(RRNodeType::NOIR);
+
+        if(v->getLine() == line && v->getColumn() == column)
+        {
+            return v;
+        }
+        //setShorterNode(v->getLine(), v->getColumn(), v);
 
         for(int i = 0; i < NB_MOVES; i++)
         {
             RRNode *w = v->getVoisin(MOVES[i]);
-            if(!w->isSolved())
+            if(w->getType() != RRNodeType::NOIR && w != RRNode::DEAD)
+            {
+                int dvw = 1;
+                if(i <= 3)
+                {
+                    dvw = 2;
+                }
+                if(w->getDistance() > v->getDistance() + dvw)
+                {
+                    w->setDistance(v->getDistance() + dvw);
+                    w->setBestPrev(v);
+                    v->setBestMove(MOVES[i]);
+                }
+                if(w->getType() != RRNodeType::GRIS)
+                {
+                    queue.push_back(w);
+                    addToQueue(queue, w);
+                }
+            }
+        }
+        LogD("ici");
+    }
+    return NULL;
+}
+void RRGraph::findBestRoutes()
+{
+    if(_nodes.size() == 0)
+    {
+        return;
+    }
+
+    resetShorterNodes();
+    vector<RRNode *> queue(0);
+    for(unsigned int i = 0; i < _nodes.size(); i++)
+    {
+        _nodes[i]->setDistance(INT_MAX);
+        _nodes[i]->setBestPrev(NULL);
+        _nodes[i]->setType(RRNodeType::BLANC);
+    }
+
+    _node->setDistance(0);
+    addToQueue(queue, _node);
+
+    while(!queue.empty())
+    {
+        unsigned int min_index = minDist(queue);
+        RRNode *v = queue[min_index];
+        queue.erase(queue.begin() + min_index);
+
+        v->setType(RRNodeType::NOIR);
+
+        setShorterNode(v->getLine(), v->getColumn(), v);
+
+        for(int i = 0; i < NB_MOVES; i++)
+        {
+            RRNode *w = v->getVoisin(MOVES[i]);
+            if(w->getType() != RRNodeType::NOIR && w != RRNode::DEAD)
             {
                 int dvw = 1;
                 if(w->getDistance() > v->getDistance() + dvw)
                 {
                     w->setDistance(v->getDistance() + dvw);
                     w->setBestPrev(v);
+                    v->setBestMove(MOVES[i]);
                 }
-                if(!w->isVisited())
+                if(w->getType() != RRNodeType::GRIS)
                 {
-                    w->setInQueue(true);
+                    queue.push_back(w);
+                    addToQueue(queue, w);
                 }
+            }
+        }
+        LogD("ici");
+    }
+}
+
+void RRGraph::init()
+{
+    for(unsigned int n = 0; n < _nodes.size(); n++)
+    {
+        RRNode *node = _nodes[n];
+        for(int i = 0; i < NB_MOVES; i++)
+        {
+            RRNode *voisin = node->getVoisin(MOVES[i]);
+            //Si voisin n'est pas case morte et si il n'a pas deja ete traite
+            if(voisin != RRNode::DEAD && voisin->getVoisin(MOVES[0]) == NULL)
+            {
+                for(int m = 0; m < NB_MOVES; m++)
+                {
+                    RRRobot bot = voisin->getRobot();
+                    rr_board_play(_board, bot, MOVES[m]);
+                    if(bot.status == RRRobotStatus::RR_ROBOT_DEAD)
+                    {
+                        voisin->setVoisin(MOVES[m], RRNode::DEAD);
+                    }
+                    else
+                    {
+                        RRNode *rr_node2 = new RRNode(bot);
+                        int index = isNodeExists(*rr_node2);
+                        if(index != -1)
+                        {
+                            voisin->setVoisin(MOVES[m], _nodes[index]);
+                        }
+                        else
+                        {
+                            voisin->setVoisin(MOVES[m], rr_node2);
+                        }
+                    }
+                }
+                _nodes.push_back(voisin);
             }
         }
     }
@@ -257,11 +346,37 @@ unsigned int RRGraph::minDist(vector<RRNode *> &queue)
     unsigned int min = 0;
     for(unsigned int i = 0; i < queue.size(); i++)
     {
-        if(queue[i]->getDistance() < queue[min]->getDistance())
+        if(queue[i]->getDistance() < queue[min]->getDistance() && queue[i] != RRNode::DEAD)
         {
             min = i;
         }
     }
 
     return min;
+}
+
+void RRGraph::resetShorterNodes()
+{
+    if(_shorter_nodes)
+    {
+        _shorter_nodes->clear();
+        delete _shorter_nodes;
+    }
+    _shorter_nodes = new vector<vector<RRNode *> *>(_board.width, NULL);
+
+    for(unsigned int i = 0; i < _board.width; i++)
+    {
+        (*_shorter_nodes)[i] = new vector<RRNode *>(_board.height, NULL);
+    }
+}
+
+void RRGraph::addToQueue(std::vector<RRNode *> &queue, RRNode * node)
+{
+    if(node == RRNode::DEAD || node == NULL)
+    {
+        return;
+    }
+
+    queue.push_back(node);
+    node->setType(RRNodeType::GRIS);
 }

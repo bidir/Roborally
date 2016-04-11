@@ -18,7 +18,7 @@ LDFLAGS +=
 GTK_CPPFLAGS  = $(CPPFLAGS) $(shell pkg-config --cflags gtk+-3.0 librsvg-2.0)
 GTK_LDFLAGS = $(LDFLAGS) $(shell pkg-config --libs gtk+-3.0 librsvg-2.0)
 
-all :showboard editor sansgtk
+all :showboard editor
 
 $(OBJECTS) : %.o : %.cpp
 	$(CPP) -c $(CPPFLAGS) $? -o $@
