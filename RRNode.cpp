@@ -27,7 +27,58 @@
 using namespace std;
 
 
-RRNode *RRNode::DEAD = new RRNode();
+RRNode RRNode::DEAD;
+const RRRobotMove RRNode::MOVES[NB_MOVES] =
+{
+    RR_MOVE_FORWARD_1,
+    RR_MOVE_FORWARD_2,
+    RR_MOVE_FORWARD_3,
+    RR_MOVE_BACKWARD_1,
+    RR_TURN_LEFT,
+    RR_TURN_RIGHT,
+    RR_U_TURN
+};
+
+const char *RRNode::MOVES_NAMES[NB_MOVES] =
+{
+    "Avancer de 1 (1)",
+    "Avancer de 2 (2)",
+    "Avancer de 3 (3)",
+    "Reculer de 1 (4)",
+    "Tourner a gauche (L)",
+    "Tourner a droite (R)",
+    "Se retourner (U)"
+};
+
+const char RRNode::C_MOVES_NAMES[NB_MOVES] =
+{
+    '1',
+    '2',
+    '3',
+    '4',
+    'L',
+    'R',
+    'U'
+};
+
+const char *RRNode::RSTATUS[5] =
+{
+    "EST",
+    "NORD",
+    "OUEST",
+    "SUD",
+    "MORT"
+};
+
+const char RRNode::C_RSTATUS[5] =
+{
+    'E',
+    'N',
+    'O',
+    'S',
+    'M'
+};
+
 
 
 /* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\

@@ -37,9 +37,12 @@ class RRGraph
 {
         /* ====================  Data members  ==================== */
     private:
+        bool _limited_moves;
         RRNode *_node;
         RRBoard _board;
         std::vector<RRNode *> _nodes;
+        std::vector<RRRobotMove> _perm_moves;
+        std::vector<bool> _perm_moves_use;
 
 
     public:
@@ -50,13 +53,19 @@ class RRGraph
 
 
         /* ====================  Accessors     ==================== */
+        bool getLimitedMoves();
         bool isDead();
         RRNode *getNode();
         RRRobot getRobot();
         RRBoard getBoard();
+        RRRobotMove getPermMove(int unsigned n);
+        const std::vector<RRRobotMove> &getPermMoves() const;
 
 
         /* ====================  Mutators      ==================== */
+        void setLimitedMoves(bool lim);
+        void setPermMoves(RRRobotMove *moves, unsigned int size);
+        void setPermMoves(std::vector<RRRobotMove> &moves);
 
 
         /* ====================  Operators     ==================== */
@@ -69,14 +78,20 @@ class RRGraph
         void move(RRRobotMove move);
         RRNode *findBestRoute(unsigned int line, unsigned int column);
         RRNode *findBestRoute(RRRobot &robot);
+        RRTile getTile(unsigned int l, unsigned int c);
 
 
     protected:
         /* ====================  Methods       ==================== */
+        RRNode *findBestRoute(RRRobot &robot, bool compareOrientation);
         void init();
         unsigned int minDist(std::vector<RRNode *> &queue);
         void addToQueue(std::vector<RRNode *> &queue, RRNode * node);
         void invertRoute(RRNode *node);
+        void usePermMove(const RRRobotMove &move);
+        bool isMovePermitted(const RRRobotMove &move);
+        void resetUsedMoves();
+        void clearNodes();
 };
 /* -----************************  end of class  ************************----- \\
    RRNode

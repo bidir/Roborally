@@ -29,18 +29,6 @@
 
 
 
-const RRRobotMove MOVES[NB_MOVES] =
-{
-    RR_MOVE_FORWARD_1,
-    RR_MOVE_FORWARD_2,
-    RR_MOVE_FORWARD_3,
-    RR_MOVE_BACKWARD_1,
-    RR_TURN_LEFT,
-    RR_TURN_RIGHT,
-    RR_U_TURN
-};
-
-
 typedef enum
 {
     BLANC,
@@ -60,7 +48,12 @@ class RRNode
 {
         /* ====================  Data members  ==================== */
     public:
-        static RRNode *DEAD;
+        static RRNode DEAD;
+        static const RRRobotMove MOVES[NB_MOVES];
+        static const char *MOVES_NAMES[NB_MOVES];
+        static const char *RSTATUS[5];
+        static const char C_MOVES_NAMES[NB_MOVES];
+        static const char C_RSTATUS[5];
 
     private:
         bool _visited;

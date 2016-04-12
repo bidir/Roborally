@@ -18,10 +18,7 @@ LDFLAGS +=
 GTK_CPPFLAGS  = $(CPPFLAGS) $(shell pkg-config --cflags gtk+-3.0 librsvg-2.0)
 GTK_LDFLAGS = $(LDFLAGS) $(shell pkg-config --libs gtk+-3.0 librsvg-2.0)
 
-all :showboard editor
-
-$(OBJECTS) : %.o : %.cpp
-	$(CPP) -c $(CPPFLAGS) $? -o $@
+all :sansgtk showboard editor
 
 $(GTK_OBJECTS) : %.o : %.cpp
 	$(CPP) -c $(GTK_CPPFLAGS) $? -o $@
@@ -59,7 +56,7 @@ $(EDITOR_OBJECTS): %.o : %.cpp
 ########## cleanup ##########
 
 clean:
-	@rm -f example showboard editor $(ALL_OBJECTS) $(EXAMPLE_OBJECTS) $(SHOWBOARD_OBJECTS) $(EDITOR_OBJECTS)
+	@rm -f $(ALL_OBJECTS) $(SANSGTK_OBJECTS) $(SHOWBOARD_OBJECTS) $(EDITOR_OBJECTS)
 
 cleanall: clean
-	 *~
+	@rm -f *~ sansgtk showboard editor 

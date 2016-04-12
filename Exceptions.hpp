@@ -11,6 +11,9 @@
  *      |-> Exception
  *      |-> ExOpeningFile
  *      |-> ExCreatingDir
+ *      |-> ExNullPointer
+ *      |-> ExBoard
+ *      |-> ExMemory
  *  ->Les constantes:
  *      |-> Les codes d'erreurs.
  *
@@ -208,41 +211,6 @@ class ExOpeningFile : public Exception
 };
 /* -----************************  end of class  ************************----- \\
        ExOpeningFile
-// -----****************************************************************----- */
-
-
-
-/* ////////////////////////////////////|\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
-// |....oooooooOOOO000000000000000000000000000000000000000000OOOOooooooo....| \\
-// |....oooooooOOOO00000********°°°°°^^^^^°°°°°********000000OOOOooooooo....| \\
-// |....---------------|             class             |----------------....| \\
-    Class: ExCreatingDir
-    Description:
-// |....----------------------------------------------------------------....| \\
-// |....°°°°°°°OOOOOOOOO00000000000000000000000000000000OOOOOOOOO°°°°°°°....| \\
-// \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\|///////////////////////////////////// */
-class ExCreatingDir : public Exception
-{
-    public:
-        /* ====================  Constructors  ==================== */
-        ExCreatingDir
-            (
-                const std::string &msg,
-                const std::string &file,
-                const std::string &function,
-                int line
-            ) throw():Exception(ERR_CREATE_DIR, msg, file, function, line)
-        {};
-
-        ExCreatingDir
-            (
-                const std::string &msg,
-                const ExceptionInfo &info
-            ) throw():Exception(ERR_CREATE_DIR, msg, info)
-        {};
-};
-/* -----************************  end of class  ************************----- \\
-       ExCreatingDir
 // -----****************************************************************----- */
 
 

@@ -38,9 +38,12 @@ Description:
 
 /* ====================  Constructors  ==================== */
 RRGraph::RRGraph():
+    _limited_moves(false),
     _node(NULL),
     _board(),
-    _nodes()
+    _nodes(),
+    _perm_moves(),
+    _perm_moves_use()
 {}
 
 RRGraph::RRGraph(const string &filename):
@@ -58,18 +61,17 @@ RRGraph::RRGraph(const string &filename):
 
 RRGraph::~RRGraph()
 {
-    for(unsigned int i = 0; i < _nodes.size(); i++)
-    {
-        if(_nodes[i] && _nodes[i] != RRNode::DEAD)
-        {
-            delete _nodes[i];
-        }
-    }
+    clearNodes();
     rr_board_destroy(_board);
 }
 
 
 /* ====================  Accessors     ==================== */
+bool RRGraph::getLimitedMoves()
+{
+    return _limited_moves;
+}
+
 bool RRGraph::isDead()
 {
     return _node->isDead();
@@ -90,22 +92,59 @@ RRBoard RRGraph::getBoard()
     return _board;
 }
 
+RRTile RRGraph::getTile(unsigned int l, unsigned int c)
+{
+    return _board.tiles[l*_board.width + c*_board.height];
+}
+
+RRRobotMove RRGraph::getPermMove(unsigned int n)
+{
+    return _perm_moves[n];
+}
+
+const vector<RRRobotMove> &RRGraph::getPermMoves() const
+{
+    return _perm_moves;
+}
+
 
 /* ====================  Mutators      ==================== */
+void RRGraph::setLimitedMoves(bool lim)
+{
+    _limited_moves = lim;
+}
+
+void RRGraph::setPermMoves(RRRobotMove *moves, unsigned int size)
+{
+    _perm_moves.clear();
+    _perm_moves_use.clear();
+    _perm_moves.resize(size);
+    _perm_moves_use.resize(size);
+    for(unsigned int i = 0; i < size; i++)
+    {
+        _perm_moves[i] = moves[i];
+        _perm_moves_use[i] = false;
+    }
+}
+
+void RRGraph::setPermMoves(vector<RRRobotMove> &moves)
+{
+    setPermMoves(moves.data(), moves.size());
+}
 
 
 /* ====================  Methods       ==================== */
 void RRGraph::init(RRRobot &robot)
 {
-    _nodes.clear();
+    clearNodes();
     RRNode *rr_node = new RRNode(robot);
     for(int m = 0; m < NB_MOVES; m++)
     {
         RRRobot bot = robot;
-        rr_board_play(_board, bot, MOVES[m]);
+        rr_board_play(_board, bot, RRNode::MOVES[m]);
         if(bot.status == RRRobotStatus::RR_ROBOT_DEAD)
         {
-            rr_node->setVoisin(MOVES[m], RRNode::DEAD);
+            rr_node->setVoisin(RRNode::MOVES[m], &RRNode::DEAD);
         }
         else
         {
@@ -113,11 +152,11 @@ void RRGraph::init(RRRobot &robot)
             int index = isNodeExists(*rr_node2);
             if(index != -1)
             {
-                rr_node->setVoisin(MOVES[m], _nodes[index]);
+                rr_node->setVoisin(RRNode::MOVES[m], _nodes[index]);
             }
             else
             {
-                rr_node->setVoisin(MOVES[m], rr_node2);
+                rr_node->setVoisin(RRNode::MOVES[m], rr_node2);
             }
         }
     }
@@ -159,7 +198,7 @@ int RRGraph::isNodeExists(RRNode &node)
 
 void RRGraph::move(RRRobotMove move)
 {
-    if(_node == RRNode::DEAD)
+    if(_node == &RRNode::DEAD)
     {
         return;
     }
@@ -168,71 +207,57 @@ void RRGraph::move(RRRobotMove move)
 
 RRNode *RRGraph::findBestRoute(RRRobot &robot)
 {
-    if(_nodes.size() == 0)
+    try
     {
-        return NULL;
+        return findBestRoute(robot, true);
     }
-
-    RRNode node(robot);
-    unsigned int line(robot.line), column(robot.column);
-    vector<RRNode *> queue(0);
-    for(unsigned int i = 0; i < _nodes.size(); i++)
+    catch(Exception &ex)
     {
-        _nodes[i]->setDistance(INT_MAX);
-        _nodes[i]->setBestPrev(NULL);
-        _nodes[i]->setType(RRNodeType::BLANC);
+        AddTrace(ex);
+        throw ex;
     }
-
-    _node->setDistance(0);
-    addToQueue(queue, _node);
-
-    while(!queue.empty())
-    {
-        unsigned int min_index = minDist(queue);
-        RRNode *v = queue[min_index];
-        queue.erase(queue.begin() + min_index);
-
-        v->setType(RRNodeType::NOIR);
-
-        if(node == *v)
-        {
-            invertRoute(v);
-            return v;
-        }
-
-        for(int i = 0; i < NB_MOVES; i++)
-        {
-            RRNode *w = v->getVoisin(MOVES[i]);
-            if(w->getType() != RRNodeType::NOIR && w != RRNode::DEAD)
-            {
-                int dvw = 2;
-                dvw = (line - w->getLine())*(line - w->getLine())+(column - w->getColumn())*(column - w->getColumn());
-                if(w->getDistance() > v->getDistance() + dvw)
-                {
-                    w->setDistance(v->getDistance() + dvw);
-                    w->setBestPrev(v);
-                    w->setBestMove(MOVES[i]);
-                }
-                if(w->getType() != RRNodeType::GRIS)
-                {
-                    queue.push_back(w);
-                    addToQueue(queue, w);
-                }
-            }
-        }
-        LogD("ici");
-    }
-    return NULL;
 }
 
 RRNode *RRGraph::findBestRoute(unsigned int line, unsigned int column)
+{
+    try
+    {
+        RRRobot robot;
+        robot.line = line;
+        robot.column = column;
+        return findBestRoute(robot, false);
+    }
+    catch(Exception &ex)
+    {
+        AddTrace(ex);
+        throw ex;
+    }
+
+}
+
+RRNode *RRGraph::findBestRoute(RRRobot &robot, bool comp)
 {
     if(_nodes.size() == 0)
     {
         return NULL;
     }
 
+    if(robot.line >= _board.width || robot.column >= _board.height)
+    {
+        throw GenEx(ExBoard, "La case (" + toString(robot.line) + "," + toString(robot.column) + ") est en dehors du plateau");
+    }
+
+    if(getTile(robot.line, robot.column).type == RRTileType::RR_TILE_NONE)
+    {
+        throw GenEx(ExBoard, "La case (" + toString(robot.line) + "," + toString(robot.column) + ") est bloquee");
+    }
+
+    resetUsedMoves();
+
+    RRNode node(robot);
+    unsigned int line(robot.line), column(robot.column);
     vector<RRNode *> queue(0);
+
     for(unsigned int i = 0; i < _nodes.size(); i++)
     {
         _nodes[i]->setDistance(INT_MAX);
@@ -243,15 +268,25 @@ RRNode *RRGraph::findBestRoute(unsigned int line, unsigned int column)
     _node->setDistance(0);
     addToQueue(queue, _node);
 
-    while(!queue.empty())
+    unsigned int index = 0;
+    while(!queue.empty() && index < _nodes.size())
     {
         unsigned int min_index = minDist(queue);
         RRNode *v = queue[min_index];
         queue.erase(queue.begin() + min_index);
 
         v->setType(RRNodeType::NOIR);
+        if(v != _node)
+        {
+            usePermMove(v->getBestMove());
+        }
 
-        if(v->getLine() == line && v->getColumn() == column)
+        if(comp && *v == node)
+        {
+            invertRoute(v);
+            return v;
+        }
+        else if(line == v->getLine() && column == v->getColumn())
         {
             invertRoute(v);
             return v;
@@ -259,25 +294,58 @@ RRNode *RRGraph::findBestRoute(unsigned int line, unsigned int column)
 
         for(int i = 0; i < NB_MOVES; i++)
         {
-            RRNode *w = v->getVoisin(MOVES[i]);
-            if(w->getType() != RRNodeType::NOIR && w != RRNode::DEAD)
+            RRNode *w = v->getVoisin(RRNode::MOVES[i]);
+            if(w->getType() != RRNodeType::NOIR && w != &RRNode::DEAD && isMovePermitted(RRNode::MOVES[i]))
             {
-                int dvw = (line - w->getLine())*(line - w->getLine())+(column - w->getColumn())*(column - w->getColumn());
+                int dvw = 1;
+                //int dvw = (line - w->getLine())*(line - w->getLine())+(column - w->getColumn())*(column - w->getColumn());
                 if(w->getDistance() > v->getDistance() + dvw)
                 {
                     w->setDistance(v->getDistance() + dvw);
                     w->setBestPrev(v);
-                    w->setBestMove(MOVES[i]);
+                    w->setBestMove(RRNode::MOVES[i]);
                 }
                 if(w->getType() != RRNodeType::GRIS)
                 {
-                    queue.push_back(w);
                     addToQueue(queue, w);
                 }
             }
         }
+        index++;
     }
     return NULL;
+}
+
+void RRGraph::usePermMove(const RRRobotMove &move)
+{
+    if(!_limited_moves || _perm_moves.size() == 0)
+    {
+        for(unsigned int i = 0; i < _perm_moves.size(); i++)
+        {
+            if(_perm_moves[i] == move)
+            {
+                _perm_moves_use[i] = true;
+            }
+        }
+    }
+
+}
+
+bool RRGraph::isMovePermitted(const RRRobotMove &move)
+{
+    if(!_limited_moves || _perm_moves.size() == 0)
+    {
+        return true;
+    }
+
+    for(unsigned int i = 0; i < _perm_moves.size(); i++)
+    {
+        if(_perm_moves[i] == move && !_perm_moves_use[i])
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 void RRGraph::init()
@@ -287,17 +355,17 @@ void RRGraph::init()
         RRNode *node = _nodes[n];
         for(int i = 0; i < NB_MOVES; i++)
         {
-            RRNode *voisin = node->getVoisin(MOVES[i]);
+            RRNode *voisin = node->getVoisin(RRNode::MOVES[i]);
             //Si voisin n'est pas case morte et si il n'a pas deja ete traite
-            if(voisin != RRNode::DEAD && voisin->getVoisin(MOVES[0]) == NULL)
+            if(voisin != &RRNode::DEAD && voisin->getVoisin(RRNode::MOVES[0]) == NULL)
             {
                 for(int m = 0; m < NB_MOVES; m++)
                 {
                     RRRobot bot = voisin->getRobot();
-                    rr_board_play(_board, bot, MOVES[m]);
+                    rr_board_play(_board, bot, RRNode::MOVES[m]);
                     if(bot.status == RRRobotStatus::RR_ROBOT_DEAD)
                     {
-                        voisin->setVoisin(MOVES[m], RRNode::DEAD);
+                        voisin->setVoisin(RRNode::MOVES[m], &RRNode::DEAD);
                     }
                     else
                     {
@@ -305,11 +373,12 @@ void RRGraph::init()
                         int index = isNodeExists(*rr_node2);
                         if(index != -1)
                         {
-                            voisin->setVoisin(MOVES[m], _nodes[index]);
+                            voisin->setVoisin(RRNode::MOVES[m], _nodes[index]);
+                            delete rr_node2;
                         }
                         else
                         {
-                            voisin->setVoisin(MOVES[m], rr_node2);
+                            voisin->setVoisin(RRNode::MOVES[m], rr_node2);
                         }
                     }
                 }
@@ -324,7 +393,7 @@ unsigned int RRGraph::minDist(vector<RRNode *> &queue)
     unsigned int min = 0;
     for(unsigned int i = 0; i < queue.size(); i++)
     {
-        if(queue[i]->getDistance() < queue[min]->getDistance() && queue[i] != RRNode::DEAD)
+        if(queue[i]->getDistance() < queue[min]->getDistance() && queue[i] != &RRNode::DEAD)
         {
             min = i;
         }
@@ -335,7 +404,7 @@ unsigned int RRGraph::minDist(vector<RRNode *> &queue)
 
 void RRGraph::addToQueue(std::vector<RRNode *> &queue, RRNode * node)
 {
-    if(node == RRNode::DEAD || node == NULL)
+    if(node == &RRNode::DEAD || node == NULL)
     {
         return;
     }
@@ -346,7 +415,10 @@ void RRGraph::addToQueue(std::vector<RRNode *> &queue, RRNode * node)
 
 void RRGraph::invertRoute(RRNode *n)
 {
-    return;
+    if(n == _node)
+    {
+        return;
+    }
     RRNode *node = n;
     RRNode *prev = NULL;
 
@@ -354,7 +426,39 @@ void RRGraph::invertRoute(RRNode *n)
     {
         prev = node->getBestPrev();
         prev->setBestNext(node);
-        prev->setBestMove(node->getBestMove());
         node = prev;
     }
+
+    node = _node;
+    RRNode *next = NULL;
+    while(node != n)
+    {
+        next = node->getBestNext();
+        node->setBestMove(next->getBestMove());
+        node = next;
+    }
+
+}
+
+void RRGraph::resetUsedMoves()
+{
+    if(_limited_moves)
+    {
+        for(unsigned int i = 0; i < _perm_moves_use.size(); i++)
+        {
+            _perm_moves_use[i] = false;
+        }
+    }
+}
+
+void RRGraph::clearNodes()
+{
+    for(unsigned int i = 0; i < _nodes.size(); i++)
+    {
+        if(_nodes[i] != &RRNode::DEAD)
+        {
+            delete _nodes[i];
+        }
+    }
+    _nodes.clear();
 }
