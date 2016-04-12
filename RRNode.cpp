@@ -138,6 +138,11 @@ RRNode *RRNode::getBestPrev()
     return _best_prev;
 }
 
+RRNode *RRNode::getBestNext()
+{
+    return _best_next;
+}
+
 RRNode *RRNode::getVoisin(RRRobotMove move)
 {
     return _voisins[move];
@@ -198,6 +203,16 @@ void RRNode::setBestPrev(RRNode *prev)
 void RRNode::setBestPrev(RRNode &prev)
 {
     setBestPrev(&prev);
+}
+
+void RRNode::setBestNext(RRNode *next)
+{
+    _best_next = next;
+}
+
+void RRNode::setBestNext(RRNode &next)
+{
+    setBestNext(&next);
 }
 
 void RRNode::setVoisin(RRRobotMove move, RRNode *node)

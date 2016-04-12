@@ -73,6 +73,7 @@ class RRNode
         RRRobotMove _best_move;
 
         RRNode *_best_prev;
+        RRNode *_best_next;
         RRNodeType _type;
 
         std::vector<RRNode *> _voisins;
@@ -104,6 +105,7 @@ class RRNode
         RRRobot getRobot();
         RRNodeType getType();
         RRNode *getBestPrev();
+        RRNode *getBestNext();
         RRNode *getVoisin(RRRobotMove move);
 
 
@@ -119,6 +121,8 @@ class RRNode
         void setType(RRNodeType type);
         void setBestPrev(RRNode *best);
         void setBestPrev(RRNode &best);
+        void setBestNext(RRNode *best);
+        void setBestNext(RRNode &best);
         void setVoisin(RRRobotMove move, RRNode *node);
         void setVoisin(RRRobotMove move, RRNode &node);
 

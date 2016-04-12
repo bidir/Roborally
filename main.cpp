@@ -128,9 +128,9 @@ void example()
         robot.status = RR_ROBOT_N ;
 
         graph.init(robot);
-        graph.findBestRoutes();
 
-        RRRobot prev_robot ; robot_cpy(robot, prev_robot) ;
+        RRRobot prev_robot;
+        robot_cpy(robot, prev_robot) ;
 
         const RRRobotMove moves[13] =
         {
@@ -149,21 +149,15 @@ void example()
             RR_MOVE_FORWARD_2
         } ;
 
+        RRNode *node = graph.findBestRoute(4, 0);
+        RRNode *next = graph.getNode();
 
-        cout << "merde" << endl;
-        RRNode *node = graph.getShorterNode(0, 4);
-        //RRNode *node = graph.findBestRoutes(0, 4);
-        //RRNode *node = graph.findBestRoutes(4, 5);
-
-        do
+        while(next != node)
         {
-            robot_print(node->getRobot());
-            move_print(node->getBestMove());
-            node = node->getBestPrev();
+            move_print(next->getBestMove());
+            robot_print(next->getRobot());
+            next = next->getBestNext();
         }
-        while(node != graph.getNode());
-        robot_print(graph.getNode()->getRobot());
-        move_print(graph.getNode()->getBestMove());
 
         cout << "======================================" << endl;
 

@@ -40,7 +40,6 @@ class RRGraph
         RRNode *_node;
         RRBoard _board;
         std::vector<RRNode *> _nodes;
-        std::vector<std::vector<RRNode *> *> *_shorter_nodes;
 
 
     public:
@@ -55,11 +54,9 @@ class RRGraph
         RRNode *getNode();
         RRRobot getRobot();
         RRBoard getBoard();
-        RRNode *getShorterNode(unsigned int line, unsigned int column);
 
 
         /* ====================  Mutators      ==================== */
-        void setShorterNode(unsigned int line, unsigned int column, RRNode *node);
 
 
         /* ====================  Operators     ==================== */
@@ -70,18 +67,16 @@ class RRGraph
         void init(const std::string filename, RRRobot &robot);
         int isNodeExists(RRNode &node);
         void move(RRRobotMove move);
-        void findBestRoutes();
-        RRNode *findBestRoutes(unsigned int line, unsigned int column);
-        RRNode *bestRoute(unsigned int line, unsigned int column);
-
+        RRNode *findBestRoute(unsigned int line, unsigned int column);
+        RRNode *findBestRoute(RRRobot &robot);
 
 
     protected:
         /* ====================  Methods       ==================== */
         void init();
         unsigned int minDist(std::vector<RRNode *> &queue);
-        void resetShorterNodes();
         void addToQueue(std::vector<RRNode *> &queue, RRNode * node);
+        void invertRoute(RRNode *node);
 };
 /* -----************************  end of class  ************************----- \\
    RRNode
