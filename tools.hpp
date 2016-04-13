@@ -32,11 +32,7 @@
 namespace tools
 {
     std::string toString(int val);
-    void toUpper(std::string *str);
-    std::string toUpper(std::string str);
     std::string getCurrentTime();
-    std::istream &getline(std::istream &in, std::string &line);
-    std::string removeSpaces(const std::string &str);
 }
 
 #endif

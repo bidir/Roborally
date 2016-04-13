@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctime>
-#include <regex>
+#include <sstream>
 
 #include "tools.hpp"
 #include "Log.hpp"
@@ -35,11 +35,6 @@ namespace tools
         stringstream ss;
         ss << val;
         return ss.str();
-    }
-
-    void toUpper(string *str)
-    {
-        transform(str->begin(), str->end(), str->begin(), ::toupper);
     }
 
     string getCurrentTime()
@@ -61,33 +56,5 @@ namespace tools
         string yy(pch);
         yy[yy.size()-1] = '\0';
         return yy + "/" + MM + "/" + dd + " " + hh + ":" + mm + ":" + ss;
-    }
-
-    string toUpper(string str)
-    {
-        transform(str.begin(), str.end(), str.begin(), ::toupper);
-        return str;
-    }
-
-    istream &getline(istream &in, string &line)
-    {
-        if(
-                std::getline(in, line) &&
-                line.find("\r") != string::npos &&
-                line.size() > 1 &&
-                line.substr(line.size() - 1) == "\r"
-          )
-        {
-            line = line.substr(0, line.size() - 1);
-        }
-
-
-        return in;
-    }
-
-    string removeSpaces(const string &str)
-    {
-        regex e("\\s");
-        return regex_replace(str, e, "");
     }
 }
