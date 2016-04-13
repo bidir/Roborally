@@ -31,6 +31,7 @@ wget
 editor
 example
 showboard
+sansgtk
 
 # VIM
 *.swp
