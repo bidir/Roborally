@@ -53,17 +53,18 @@ class RRGraph
 
 
         /* ====================  Accessors     ==================== */
-        bool isLimitedMoves(); //
-        bool isDead();
-        RRNode *getNode();
-        RRRobot getRobot();
-        RRBoard getBoard();
-        RRRobotMove getPermMove(int unsigned n);
+        bool isLimitedMoves(); //Si utiliser mvt limités
+        bool isDead(); //Verifier si robot mort
+        RRNode *getNode(); //renvoie le noeud sur lequel est le robot
+        RRRobot getRobot();//Revoie le robot
+        RRBoard getBoard();//Revoie le plateau
+        RRRobotMove getPermMove(int unsigned n);//Revoie le mvt permis
+        const RRTile &getTile(const unsigned int &l, const unsigned int &c);
         const std::vector<RRRobotMove> &getPermMoves() const;
 
 
         /* ====================  Mutators      ==================== */
-        void limiteMoves(bool lim);
+        void limiteMoves(bool lim);//Utiliser les mvt limités
         void limiteMoves(std::vector<RRRobotMove> &moves);
         void setPermMoves(RRRobotMove *moves, const unsigned int &size);
         void setPermMoves(std::vector<RRRobotMove> &moves);
@@ -74,13 +75,14 @@ class RRGraph
 
 
         /* ====================  Methods       ==================== */
-        void init(RRRobot &robot);
-        void init(const char *filename, RRRobot &robot);
-        int isNodeExists(RRNode &node);
-        void move(RRRobotMove move);
+        void init(RRRobot &robot);//Initialiser le graphe avec robot.
+        void init(const char *filename, RRRobot &robot);//Init plateau et robot
+        int isNodeExists(RRNode &node);//Si node existe.
+        void move(RRRobotMove move);//Bouger le robot
+        //Sans prise en compte de la direction finale du robot
         RRNode *findBestRoute(const unsigned int &l, const unsigned int &c);
+        //Avec prise en compte de la direction finale du robot
         RRNode *findBestRoute(RRRobot &robot);
-        const RRTile &getTile(const unsigned int &l, const unsigned int &c);
 
 
     protected:

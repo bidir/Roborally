@@ -44,10 +44,11 @@ int main(int argc, char *argv[])
 
     Log::add(log_file);
     Log::setDebugOut(d_file);
+    Log::init();
+    LogD("DEBUT");
 
     try
     {
-        Log::init();
 
         unsigned int max = 1;
         char *filename = NULL;
@@ -117,6 +118,7 @@ int main(int argc, char *argv[])
 void end()
 {
     cout << endl;
+    LogD("FIN");
     log_file.close();
     d_file.close();
 }

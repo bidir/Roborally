@@ -53,6 +53,7 @@ RRGraph::RRGraph(const char *filename):
 {
     try
     {
+        //Initialiser le robot.
         rr_board_init(_board, filename);
     }
     catch(Exception &ex)
@@ -134,7 +135,10 @@ void RRGraph::setPermMoves(RRRobotMove *moves, const unsigned int &size)
 
 void RRGraph::setPermMoves(vector<RRRobotMove> &moves)
 {
+    //vider les mvt permis
     _perm_moves.clear();
+    //vider les mvt utilises
+    _perm_moves_use.clear();
     _perm_moves_use.clear();
     _perm_moves_use.resize(moves.size(), false);
     _perm_moves = moves;
@@ -148,12 +152,18 @@ void RRGraph::setPermMoves(vector<RRRobotMove> *moves)
 /* ====================  Methods       ==================== */
 void RRGraph::init(RRRobot &robot)
 {
+    //Supprimer tous les nouds récédement calculés
     clearNodes();
+    //Création d'un noeud initial.
     RRNode *rr_node = new RRNode(robot);
+    _nodes.push_back(rr_node);
+    //Pour tous les mouvements possible.
     for(int m = 0; m < NB_MOVES; m++)
     {
         RRRobot bot = robot;
+        //Récupérer le voisin suivant un mouvement donné.
         rr_board_play(_board, bot, RRNode::MOVES[m]);
+        //Si robot mort, mettre le voisin comme l'unique noeud DEAD.
         if(bot.status == RRRobotStatus::RR_ROBOT_DEAD)
         {
             rr_node->setVoisin(RRNode::MOVES[m], &RRNode::DEAD);
@@ -161,19 +171,23 @@ void RRGraph::init(RRRobot &robot)
         else
         {
             RRNode *rr_node2 = new RRNode(bot);
+            //Vérifier si le voisin existe.
             int index = isNodeExists(*rr_node2);
+            //Si oui
             if(index != -1)
             {
+                //Pointer vers lui.
                 rr_node->setVoisin(RRNode::MOVES[m], _nodes[index]);
+                delete rr_node2;
             }
             else
             {
+                //Sinon, ajouter à _nodes.
                 rr_node->setVoisin(RRNode::MOVES[m], rr_node2);
             }
         }
     }
 
-    _nodes.push_back(rr_node);
     _node = rr_node;
     init();
 }
@@ -399,6 +413,7 @@ void RRGraph::init()
             }
         }
     }
+
 }
 
 unsigned int RRGraph::minDist(vector<RRNode *> &queue)
