@@ -24,7 +24,6 @@
 #include <fstream>
 #include <stdlib.h>
 #include <time.h>
-#include <string>
 
 #include "Log.hpp"
 #include "main.hpp"
@@ -50,49 +49,46 @@ int main(int argc, char *argv[])
     {
         Log::init();
 
-        int max = 1;
-        string filename("");
+        unsigned int max = 1;
+        char *filename = NULL;
         if(argc == 2)
         {
-            if(string(argv[1]) == "-b")
+            if(strcmp(argv[1], "-b") == 0)
             {
                 max = 10;
             }
             else
             {
-                filename = string(argv[1]);
+                filename = argv[1];
             }
         }
         else if(argc > 2)
         {
-            if(string(argv[1]) == "-b")
+            if(strcmp(argv[1], "-b") == 0)
             {
                 max = 10;
-                filename = string(argv[2]);
+                filename = argv[2];
             }
             else
             {
-                filename = string(argv[1]);
+                filename = argv[1];
             }
         }
 
-        for(int i = 0; i < max; i++)
-        {
-            if(filename == "")
+            if(filename)
             {
-                // ************************
-                testBestRoute("boards/board.txt");
-                testBestRoute("boards/board1.txt");
-                testLimitedMoves("boards/board.txt");
-                testLimitedMoves("boards/board1.txt");
-                // ************************
+                testBestRoute(filename, max);
+                testLimitedMoves(filename, max);
             }
             else
             {
-                testBestRoute(filename);
-                testLimitedMoves(filename);
+                // ************************
+                testBestRoute("boards/board.txt", max);
+                testBestRoute("boards/board1.txt", max);
+                testLimitedMoves("boards/board.txt", max);
+                testLimitedMoves("boards/board1.txt", max);
+                // ************************
             }
-        }
              
 
         end(); return 0; 
@@ -102,12 +98,14 @@ int main(int argc, char *argv[])
         AddTrace(e);
         Log::e(e);
         end();
+        cerr << e.getMessage() << endl;
         return e.getCode();
     }
     catch(const exception &e)
     {
         Log::e(e.what());
         end();
+        cerr << e.what() << endl;
         return -1;
     }
 
@@ -128,7 +126,7 @@ void robot_cpy(const RRRobot& from, RRRobot& to)
     std::memcpy(&to, &from, sizeof(RRRobot)) ;
 }
 
-void testBestRoute(const string &filename)
+void testBestRoute(const char *filename, unsigned int numb)
 {
     cout << endl << endl
          << "*********** TEST BEST ROUTE **********" << endl
@@ -142,16 +140,18 @@ void testBestRoute(const string &filename)
         RRRobot robot ;
         robot.line = graph->getBoard().tiles[0].line ;
         robot.column = graph->getBoard().tiles[0].column ;
-        robot.status = RR_ROBOT_N ;
+        robot.status = RR_ROBOT_N;
 
         graph->init(robot);
 
         RRRobot prev_robot;
         robot_cpy(robot, prev_robot) ;
 
-        findBestRoute(graph, rand()%graph->getBoard().width, rand()%graph->getBoard().height);
-
-        cout << "=========================================" << endl;
+        for(unsigned int i = 0; i < numb; i++)
+        {
+            findBestRoute(graph, rand()%graph->getBoard().width, rand()%graph->getBoard().height);
+            cout << "=========================================" << endl;
+        }
     }
     catch(Exception &ex)
     {
@@ -162,7 +162,7 @@ void testBestRoute(const string &filename)
     delete graph;
 }
 
-void findBestRoute(RRGraph *graph, unsigned int l, unsigned int c)
+void findBestRoute(RRGraph *graph, const unsigned int &l, const unsigned int &c)
 {
     try
     {
@@ -199,9 +199,8 @@ void findBestRoute(RRGraph *graph, unsigned int l, unsigned int c)
     }
 }
 
-void testLimitedMoves(const std::string &filename)
+void testLimitedMoves(const char *filename, unsigned int numb)
 {
-
     cout << endl << endl
          << "********* TEST BEST LIMITED **********" << endl
          << "-----| file: " << filename              << endl
@@ -211,25 +210,28 @@ void testLimitedMoves(const std::string &filename)
     try
     {
         graph = new RRGraph(filename);
-
         RRRobot robot ;
         robot.line = graph->getBoard().tiles[0].line ;
         robot.column = graph->getBoard().tiles[0].column ;
         robot.status = RR_ROBOT_N ;
 
         graph->init(robot);
-        vector<RRRobotMove> moves = getPermMoves(9);
-        graph->setPermMoves(moves);
-        graph->setLimitedMoves(true);
 
-        RRRobot prev_robot;
-        robot_cpy(robot, prev_robot) ;
+        for(unsigned int i = 0; i < numb; i++)
+        {
+            vector<RRRobotMove> moves = getPermMoves(9);
+            graph->setPermMoves(moves);
+            graph->limiteMoves(true);
 
-        printMoves(moves);
-        findBestRoute(graph, rand()%graph->getBoard().width, rand()%graph->getBoard().height);
-        printCMoves(moves);
+            RRRobot prev_robot;
+            robot_cpy(robot, prev_robot) ;
 
-        cout << "=========================================" << endl;
+            //printMoves(moves);
+            printCMoves(moves);
+            findBestRoute(graph, rand()%graph->getBoard().width, rand()%graph->getBoard().height);
+            cout << "=========================================" << endl;
+        }
+
     }
     catch(Exception &ex)
     {

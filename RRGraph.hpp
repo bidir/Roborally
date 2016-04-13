@@ -37,23 +37,23 @@ class RRGraph
 {
         /* ====================  Data members  ==================== */
     private:
-        bool _limited_moves;
-        RRNode *_node;
-        RRBoard _board;
-        std::vector<RRNode *> _nodes;
-        std::vector<RRRobotMove> _perm_moves;
-        std::vector<bool> _perm_moves_use;
+        bool _limited_moves; //Indique si utiliser mvt limités
+        RRNode *_node;//Le noeud initial du robot.
+        RRBoard _board; //Le plateau
+        std::vector<RRNode *> _nodes;//Tous les noeuds créés.
+        std::vector<RRRobotMove> _perm_moves; //Les mvt permis
+        std::vector<bool> _perm_moves_use;//vrai si mvt utilise
 
 
     public:
         /* ====================  Constructors  ==================== */
         RRGraph();
-        RRGraph(const std::string &filename);
+        RRGraph(const char *filename); //lit dans filename et init _board
         ~RRGraph();
 
 
         /* ====================  Accessors     ==================== */
-        bool getLimitedMoves();
+        bool isLimitedMoves(); //
         bool isDead();
         RRNode *getNode();
         RRRobot getRobot();
@@ -63,9 +63,11 @@ class RRGraph
 
 
         /* ====================  Mutators      ==================== */
-        void setLimitedMoves(bool lim);
-        void setPermMoves(RRRobotMove *moves, unsigned int size);
+        void limiteMoves(bool lim);
+        void limiteMoves(std::vector<RRRobotMove> &moves);
+        void setPermMoves(RRRobotMove *moves, const unsigned int &size);
         void setPermMoves(std::vector<RRRobotMove> &moves);
+        void setPermMoves(std::vector<RRRobotMove> *moves);
 
 
         /* ====================  Operators     ==================== */
@@ -73,12 +75,12 @@ class RRGraph
 
         /* ====================  Methods       ==================== */
         void init(RRRobot &robot);
-        void init(const std::string filename, RRRobot &robot);
+        void init(const char *filename, RRRobot &robot);
         int isNodeExists(RRNode &node);
         void move(RRRobotMove move);
-        RRNode *findBestRoute(unsigned int line, unsigned int column);
+        RRNode *findBestRoute(const unsigned int &l, const unsigned int &c);
         RRNode *findBestRoute(RRRobot &robot);
-        RRTile getTile(unsigned int l, unsigned int c);
+        const RRTile &getTile(const unsigned int &l, const unsigned int &c);
 
 
     protected:
@@ -92,6 +94,7 @@ class RRGraph
         bool isMovePermitted(const RRRobotMove &move);
         void resetUsedMoves();
         void clearNodes();
+        void destroy();
 };
 /* -----************************  end of class  ************************----- \\
    RRNode

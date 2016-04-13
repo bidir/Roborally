@@ -25,10 +25,10 @@
 
 int main(int argc, char *argv[]);
 void end();
-void testBestRoute(const std::string &filename);
-void findBestRoute(RRGraph *graph, unsigned int l, unsigned int c);
-void testLimitedMoves(const std::string &filename);
-void findByLimitedMoves(const std::string &filename);
+void testBestRoute(const char *filename, unsigned int numb);
+void findBestRoute(RRGraph *graph, const unsigned int &l, const unsigned int &c);
+void testLimitedMoves(const char *filename, unsigned int numb);
+void findByLimitedMoves(const char *filename);
 std::vector<RRRobotMove> getPermMoves(unsigned int n);
 void printMoves(std::vector<RRRobotMove> &moves);
 void printCMoves(std::vector<RRRobotMove> &moves);

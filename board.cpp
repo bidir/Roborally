@@ -375,7 +375,6 @@ void rr_board_init (RRBoard& board_in, const char* filename)
     FILE* board_file = fopen(filename, "r");
     if(!board_file)
     {
-        printf("unable to open board file\n");
         throw GenEx(ExOpeningFile, "Impossible d'ouvrir le fichier " + std::string(filename));
         return;
     }

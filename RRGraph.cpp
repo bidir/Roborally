@@ -44,30 +44,32 @@ RRGraph::RRGraph():
     _nodes(),
     _perm_moves(),
     _perm_moves_use()
-{}
+{
+    _board.tiles = NULL;
+}
 
-RRGraph::RRGraph(const string &filename):
+RRGraph::RRGraph(const char *filename):
     RRGraph()
 {
     try
     {
-        rr_board_init(_board, filename.c_str());
+        rr_board_init(_board, filename);
     }
     catch(Exception &ex)
     {
         AddTrace(ex);
+        throw ex;
     }
 }
 
 RRGraph::~RRGraph()
 {
-    clearNodes();
-    rr_board_destroy(_board);
+    destroy();
 }
 
 
 /* ====================  Accessors     ==================== */
-bool RRGraph::getLimitedMoves()
+bool RRGraph::isLimitedMoves()
 {
     return _limited_moves;
 }
@@ -92,7 +94,7 @@ RRBoard RRGraph::getBoard()
     return _board;
 }
 
-RRTile RRGraph::getTile(unsigned int l, unsigned int c)
+const RRTile &RRGraph::getTile(const unsigned int &l, const unsigned int &c)
 {
     return _board.tiles[l*_board.width + c*_board.height];
 }
@@ -109,29 +111,39 @@ const vector<RRRobotMove> &RRGraph::getPermMoves() const
 
 
 /* ====================  Mutators      ==================== */
-void RRGraph::setLimitedMoves(bool lim)
+void RRGraph::limiteMoves(bool lim)
 {
     _limited_moves = lim;
 }
 
-void RRGraph::setPermMoves(RRRobotMove *moves, unsigned int size)
+void RRGraph::limiteMoves(vector<RRRobotMove> &moves)
 {
-    _perm_moves.clear();
-    _perm_moves_use.clear();
-    _perm_moves.resize(size);
-    _perm_moves_use.resize(size);
+    limiteMoves(true);
+    setPermMoves(moves);
+}
+
+void RRGraph::setPermMoves(RRRobotMove *moves, const unsigned int &size)
+{
+    vector<RRRobotMove> v_moves(size);
     for(unsigned int i = 0; i < size; i++)
     {
-        _perm_moves[i] = moves[i];
-        _perm_moves_use[i] = false;
+        v_moves[i] = moves[i];
     }
+    setPermMoves(v_moves);
 }
 
 void RRGraph::setPermMoves(vector<RRRobotMove> &moves)
 {
-    setPermMoves(moves.data(), moves.size());
+    _perm_moves.clear();
+    _perm_moves_use.clear();
+    _perm_moves_use.resize(moves.size(), false);
+    _perm_moves = moves;
 }
 
+void RRGraph::setPermMoves(vector<RRRobotMove> *moves)
+{
+    setPermMoves(*moves);
+}
 
 /* ====================  Methods       ==================== */
 void RRGraph::init(RRRobot &robot)
@@ -166,11 +178,12 @@ void RRGraph::init(RRRobot &robot)
     init();
 }
 
-void RRGraph::init(const std::string filename, RRRobot &robot)
+void RRGraph::init(const char *filename, RRRobot &robot)
 {
+    destroy();
     try
     {
-        rr_board_init(_board, filename.c_str());
+        rr_board_init(_board, filename);
     }
     catch(Exception &ex)
     {
@@ -179,7 +192,7 @@ void RRGraph::init(const std::string filename, RRRobot &robot)
 
     if(!_board.tile_size)
     {
-        throw GenEx(ExBoard, "Recuperation des donnees dans \"" + filename + "\": le plateau est vide!");
+        throw GenEx(ExBoard, "Recuperation des donnees dans \"" + string(filename) + "\": le plateau est vide!");
     }
     init(robot);
 }
@@ -218,13 +231,13 @@ RRNode *RRGraph::findBestRoute(RRRobot &robot)
     }
 }
 
-RRNode *RRGraph::findBestRoute(unsigned int line, unsigned int column)
+RRNode *RRGraph::findBestRoute(const unsigned int &l, const unsigned int &c)
 {
     try
     {
         RRRobot robot;
-        robot.line = line;
-        robot.column = column;
+        robot.line = l;
+        robot.column = c;
         return findBestRoute(robot, false);
     }
     catch(Exception &ex)
@@ -461,4 +474,10 @@ void RRGraph::clearNodes()
         }
     }
     _nodes.clear();
+}
+
+void RRGraph::destroy()
+{
+    clearNodes();
+    rr_board_destroy(_board);
 }
