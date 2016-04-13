@@ -1,0 +1,315 @@
+
+
+*********** TEST BEST ROUTE **********
+-----| file: boards/board.txt
+**************************************
+================= 0|0 ===================
+Aller de (0,1) a (0,0):
+Impossible
+================= 4|5 ===================
+Aller de (0,1) a (4,5):
+Le robot est en (0,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (3,1) tourne vers NORD -> Se retourner (U)
+Le robot est en (4,2) tourne vers EST -> Avancer de 3 (3)
+Le robot est en (4,5) tourne vers EST
+-----------------------
+Atteint en 3 coups
+-----------------------
+================= 5|5 ===================
+Aller de (0,1) a (5,5):
+Impossible
+================= 6|6 ===================
+Aller de (0,1) a (6,6):
+La case (6,6) est en dehors du plateau
+================= 1|1 ===================
+Aller de (0,1) a (1,1):
+Le robot est en (0,1) tourne vers NORD -> Tourner a droite (R)
+Le robot est en (0,1) tourne vers EST -> Avancer de 2 (2)
+Le robot est en (1,3) tourne vers EST -> Tourner a gauche (L)
+Le robot est en (1,1) tourne vers OUEST
+-----------------------
+Atteint en 3 coups
+-----------------------
+================= 1|0 ===================
+Aller de (0,1) a (1,0):
+Le robot est en (0,1) tourne vers NORD -> Tourner a droite (R)
+Le robot est en (0,1) tourne vers EST -> Avancer de 2 (2)
+Le robot est en (1,3) tourne vers EST -> Tourner a gauche (L)
+Le robot est en (1,1) tourne vers OUEST -> Avancer de 1 (1)
+Le robot est en (1,0) tourne vers OUEST
+-----------------------
+Atteint en 4 coups
+-----------------------
+================= 3|3 ===================
+Aller de (0,1) a (3,3):
+Le robot est en (0,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (3,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (4,3) tourne vers NORD -> Avancer de 2 (2)
+Le robot est en (3,3) tourne vers EST
+-----------------------
+Atteint en 3 coups
+-----------------------
+================= 2|4 ===================
+Aller de (0,1) a (2,4):
+Le robot est en (0,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (3,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (4,3) tourne vers NORD -> Tourner a gauche (L)
+Le robot est en (3,4) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (2,4) tourne vers SUD
+-----------------------
+Atteint en 4 coups
+-----------------------
+======================================
+
+
+*********** TEST BEST ROUTE **********
+-----| file: boards/board1.txt
+**************************************
+================= 0|0 ===================
+Aller de (0,1) a (0,0):
+Impossible
+================= 4|5 ===================
+Aller de (0,1) a (4,5):
+Le robot est en (0,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (1,2) tourne vers NORD -> Tourner a droite (R)
+Le robot est en (1,3) tourne vers SUD -> Avancer de 3 (3)
+Le robot est en (4,4) tourne vers OUEST -> Avancer de 1 (1)
+Le robot est en (4,4) tourne vers NORD -> Avancer de 1 (1)
+Le robot est en (4,5) tourne vers SUD
+-----------------------
+Atteint en 5 coups
+-----------------------
+================= 5|5 ===================
+Aller de (0,1) a (5,5):
+Le robot est en (0,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (1,2) tourne vers NORD -> Tourner a droite (R)
+Le robot est en (1,3) tourne vers SUD -> Avancer de 3 (3)
+Le robot est en (4,4) tourne vers OUEST -> Avancer de 1 (1)
+Le robot est en (4,4) tourne vers NORD -> Avancer de 1 (1)
+Le robot est en (4,5) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (5,5) tourne vers SUD
+-----------------------
+Atteint en 6 coups
+-----------------------
+================= 6|6 ===================
+Aller de (0,1) a (6,6):
+La case (6,6) est en dehors du plateau
+================= 1|1 ===================
+Aller de (0,1) a (1,1):
+Le robot est en (0,1) tourne vers NORD -> Se retourner (U)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers OUEST -> Avancer de 2 (2)
+Le robot est en (1,1) tourne vers OUEST
+-----------------------
+Atteint en 4 coups
+-----------------------
+================= 1|0 ===================
+Aller de (0,1) a (1,0):
+Impossible
+================= 3|3 ===================
+Aller de (0,1) a (3,3):
+Le robot est en (0,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (1,2) tourne vers NORD -> Tourner a droite (R)
+Le robot est en (1,3) tourne vers SUD -> Avancer de 2 (2)
+Le robot est en (3,3) tourne vers OUEST
+-----------------------
+Atteint en 3 coups
+-----------------------
+================= 2|4 ===================
+Aller de (0,1) a (2,4):
+Le robot est en (0,1) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (1,2) tourne vers NORD -> Tourner a gauche (L)
+Le robot est en (1,3) tourne vers NORD -> Avancer de 1 (1)
+Le robot est en (1,4) tourne vers NORD -> Reculer de 1 (4)
+Le robot est en (2,4) tourne vers OUEST
+-----------------------
+Atteint en 4 coups
+-----------------------
+======================================
+
+
+********* TEST BEST LIMITED **********
+-----| file: boards/board.txt
+**************************************
+
+les movements permis sont: Tourner a droite (R), Tourner a droite (R), Avancer de 1 (1), Avancer de 2 (2), Avancer de 2 (2), Avancer de 3 (3), Avancer de 1 (1), Tourner a gauche (L), Tourner a droite (R)
+================= 1|1 ===================
+Aller de (0,1) a (1,1):
+Le robot est en (0,1) tourne vers NORD -> Tourner a droite (R)
+Le robot est en (0,1) tourne vers EST -> Avancer de 2 (2)
+Le robot est en (1,3) tourne vers EST -> Tourner a gauche (L)
+Le robot est en (1,1) tourne vers OUEST
+-----------------------
+Atteint en 3 coups
+-----------------------
+================= 4|5 ===================
+Aller de (0,1) a (4,5):
+Le robot est en (0,1) tourne vers NORD -> Tourner a droite (R)
+Le robot est en (0,1) tourne vers EST -> Avancer de 2 (2)
+Le robot est en (1,3) tourne vers EST -> Avancer de 2 (2)
+Le robot est en (1,5) tourne vers EST -> Tourner a droite (R)
+Le robot est en (1,5) tourne vers SUD -> Avancer de 3 (3)
+Le robot est en (4,5) tourne vers SUD
+-----------------------
+Atteint en 5 coups
+-----------------------
+
+les movements permis sont: R, R, 1, 2, 2, 3, 1, L, R
+================= 5|5 ===================
+Aller de (0,1) a (5,5):
+Impossible
+
+les movements permis sont: R, R, 1, 2, 2, 3, 1, L, R
+================= 5|4 ===================
+Aller de (0,1) a (5,4):
+Le robot est en (0,1) tourne vers NORD -> Tourner a gauche (L)
+Le robot est en (0,1) tourne vers OUEST -> Tourner a gauche (L)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 3 (3)
+Le robot est en (4,2) tourne vers EST -> Tourner a gauche (L)
+Le robot est en (4,4) tourne vers OUEST -> Avancer de 2 (2)
+Le robot est en (4,4) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (5,4) tourne vers SUD
+-----------------------
+Atteint en 6 coups
+-----------------------
+
+les movements permis sont: R, R, 1, 2, 2, 3, 1, L, R
+================= 3|4 ===================
+Aller de (0,1) a (3,4):
+Le robot est en (0,1) tourne vers NORD -> Tourner a droite (R)
+Le robot est en (0,1) tourne vers EST -> Avancer de 2 (2)
+Le robot est en (1,3) tourne vers EST -> Avancer de 2 (2)
+Le robot est en (1,5) tourne vers EST -> Tourner a droite (R)
+Le robot est en (1,5) tourne vers SUD -> Avancer de 3 (3)
+Le robot est en (4,5) tourne vers SUD -> Tourner a droite (R)
+Le robot est en (4,5) tourne vers OUEST -> Avancer de 2 (2)
+Le robot est en (3,4) tourne vers SUD
+-----------------------
+Atteint en 7 coups
+-----------------------
+
+les movements permis sont: R, R, 1, 2, 2, 3, 1, L, R
+================= 4|3 ===================
+Aller de (0,1) a (4,3):
+Le robot est en (0,1) tourne vers NORD -> Tourner a gauche (L)
+Le robot est en (0,1) tourne vers OUEST -> Tourner a gauche (L)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 3 (3)
+Le robot est en (4,2) tourne vers EST -> Tourner a gauche (L)
+Le robot est en (4,4) tourne vers OUEST -> Avancer de 3 (3)
+Le robot est en (4,3) tourne vers OUEST
+-----------------------
+Atteint en 5 coups
+-----------------------
+
+les movements permis sont: R, R, 1, 2, 2, 3, 1, L, R
+================= 5|3 ===================
+Aller de (0,1) a (5,3):
+Impossible
+
+les movements permis sont: R, R, 1, 2, 2, 3, 1, L, R
+================= 2|5 ===================
+Aller de (0,1) a (2,5):
+Impossible
+
+les movements permis sont: R, R, 1, 2, 2, 3, 1, L, R
+======================================
+
+
+********* TEST BEST LIMITED **********
+-----| file: boards/board1.txt
+**************************************
+
+les movements permis sont: Tourner a gauche (L), Avancer de 1 (1), Avancer de 2 (2), Tourner a gauche (L), Tourner a gauche (L), Se retourner (U), Tourner a gauche (L), Avancer de 2 (2), Se retourner (U)
+================= 1|1 ===================
+Aller de (0,1) a (1,1):
+Le robot est en (0,1) tourne vers NORD -> Se retourner (U)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers OUEST -> Avancer de 2 (2)
+Le robot est en (1,1) tourne vers OUEST
+-----------------------
+Atteint en 4 coups
+-----------------------
+================= 4|5 ===================
+Aller de (0,1) a (4,5):
+Le robot est en (0,1) tourne vers NORD -> Se retourner (U)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers SUD -> Avancer de 2 (2)
+Le robot est en (3,3) tourne vers OUEST -> Se retourner (U)
+Le robot est en (3,3) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (4,4) tourne vers OUEST -> Avancer de 1 (1)
+Le robot est en (4,4) tourne vers NORD -> Avancer de 1 (1)
+Le robot est en (4,5) tourne vers SUD
+-----------------------
+Atteint en 7 coups
+-----------------------
+
+les movements permis sont: L, 1, 2, L, L, U, L, 2, U
+================= 5|5 ===================
+Aller de (0,1) a (5,5):
+Le robot est en (0,1) tourne vers NORD -> Se retourner (U)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers SUD -> Avancer de 2 (2)
+Le robot est en (3,3) tourne vers OUEST -> Se retourner (U)
+Le robot est en (3,3) tourne vers SUD -> Avancer de 2 (2)
+Le robot est en (5,4) tourne vers SUD -> Tourner a gauche (L)
+Le robot est en (5,4) tourne vers EST -> Avancer de 1 (1)
+Le robot est en (5,5) tourne vers EST
+-----------------------
+Atteint en 7 coups
+-----------------------
+
+les movements permis sont: L, 1, 2, L, L, U, L, 2, U
+================= 5|4 ===================
+Aller de (0,1) a (5,4):
+Le robot est en (0,1) tourne vers NORD -> Se retourner (U)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers SUD -> Avancer de 2 (2)
+Le robot est en (3,3) tourne vers OUEST -> Se retourner (U)
+Le robot est en (3,3) tourne vers SUD -> Avancer de 2 (2)
+Le robot est en (5,4) tourne vers SUD
+-----------------------
+Atteint en 5 coups
+-----------------------
+
+les movements permis sont: L, 1, 2, L, L, U, L, 2, U
+================= 3|4 ===================
+Aller de (0,1) a (3,4):
+Le robot est en (0,1) tourne vers NORD -> Se retourner (U)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers SUD -> Avancer de 2 (2)
+Le robot est en (3,3) tourne vers OUEST -> Se retourner (U)
+Le robot est en (3,3) tourne vers SUD -> Se retourner (U)
+Le robot est en (3,3) tourne vers EST -> Avancer de 1 (1)
+Le robot est en (4,5) tourne vers OUEST -> Tourner a gauche (L)
+Le robot est en (3,4) tourne vers NORD
+-----------------------
+Atteint en 7 coups
+-----------------------
+
+les movements permis sont: L, 1, 2, L, L, U, L, 2, U
+================= 4|3 ===================
+Aller de (0,1) a (4,3):
+Impossible
+
+les movements permis sont: L, 1, 2, L, L, U, L, 2, U
+================= 5|3 ===================
+Aller de (0,1) a (5,3):
+Impossible
+
+les movements permis sont: L, 1, 2, L, L, U, L, 2, U
+================= 2|5 ===================
+Aller de (0,1) a (2,5):
+Le robot est en (0,1) tourne vers NORD -> Se retourner (U)
+Le robot est en (0,1) tourne vers SUD -> Avancer de 1 (1)
+Le robot est en (1,2) tourne vers SUD -> Se retourner (U)
+Le robot est en (1,3) tourne vers EST -> Avancer de 1 (1)
+Le robot est en (2,5) tourne vers SUD
+-----------------------
+Atteint en 4 coups
+-----------------------
+
+les movements permis sont: L, 1, 2, L, L, U, L, 2, U
+======================================
+
